@@ -100,35 +100,35 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           {/* Header */}
           <div className="text-center space-y-2 mb-8">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
-              <Sparkles size={14} className="animate-spin-slow text-indigo-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-black bg-indigo-500/10 border border-indigo-500/20 text-indigo-800 dark:text-indigo-300">
+              <Sparkles size={14} className="animate-spin-slow text-indigo-700 dark:text-indigo-400" />
               <span>JOXIQ AI Enterprise Subscriptions</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950 dark:text-white">
               Enterprise-Grade AI Intelligence & Productivity
             </h2>
-            <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+            <p className="text-xs sm:text-sm text-slate-950 dark:text-slate-100 font-black max-w-xl mx-auto">
               Select the optimal plan for academic research, heavy software engineering, and multi-model execution.
             </p>
           </div>
 
           {/* Active Usage Progress Card */}
-          <div className={`p-4 sm:p-5 rounded-2xl border ${isDark ? "bg-slate-900/80 border-slate-800" : "bg-slate-50 border-slate-200"} mb-8`}>
+          <div className={`p-4 sm:p-5 rounded-2xl border ${isDark ? "bg-slate-900/80 border-slate-800" : "bg-slate-100 border-slate-300"} mb-8`}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mb-2">
-              <div className="flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-indigo-400" />
-                <span className="font-bold">Current Active Plan:</span>
-                <span className="px-2.5 py-0.5 rounded-md font-bold uppercase bg-indigo-600/20 text-indigo-300 border border-indigo-500/30">
+              <div className="flex items-center gap-2 text-slate-950 dark:text-slate-100">
+                <Cpu className="w-4 h-4 text-indigo-700 dark:text-indigo-400" />
+                <span className="font-black">Current Active Plan:</span>
+                <span className="px-2.5 py-0.5 rounded-md font-black uppercase bg-indigo-100 dark:bg-indigo-600/20 text-indigo-900 dark:text-indigo-300 border border-indigo-400 dark:border-indigo-500/30">
                   {activePlanDetails.name}
                 </span>
               </div>
-              <div className="font-mono text-slate-400">
-                <span className="font-bold text-slate-200">{tokensUsedCurrentMonth.toLocaleString()}</span> / {currentMonthlyLimit.toLocaleString()} Monthly Tokens Used
+              <div className="font-mono font-black text-slate-950 dark:text-slate-200">
+                <span className="font-black text-slate-950 dark:text-white">{tokensUsedCurrentMonth.toLocaleString()}</span> / {currentMonthlyLimit.toLocaleString()} Monthly Tokens Used
               </div>
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-slate-800/80 h-2.5 rounded-full overflow-hidden p-0.5">
+            <div className="w-full bg-slate-300 dark:bg-slate-800/80 h-2.5 rounded-full overflow-hidden p-0.5">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   percentUsed >= 90
@@ -142,7 +142,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </div>
 
             {percentUsed >= 80 && (
-              <div className="flex items-center gap-2 text-[11px] text-amber-400 mt-2 font-medium">
+              <div className="flex items-center gap-2 text-[11px] text-amber-800 dark:text-amber-400 mt-2 font-black">
                 <AlertCircle size={13} className="shrink-0" />
                 <span>You've used {percentUsed}% of your monthly tokens. Upgrade to Pro or Ultra for expanded limits.</span>
               </div>
@@ -151,15 +151,15 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           {/* Toast Notification Messages */}
           {successMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-2">
-              <Check size={16} className="shrink-0 text-emerald-400" />
+            <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs font-black flex items-center gap-2">
+              <Check size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>{successMessage}</span>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
-              <AlertCircle size={16} className="shrink-0 text-rose-400" />
+            <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs font-black flex items-center gap-2">
+              <AlertCircle size={16} className="shrink-0 text-rose-600 dark:text-rose-400" />
               <span>{errorMessage}</span>
             </div>
           )}
@@ -176,12 +176,12 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   key={planKey}
                   className={`relative flex flex-col justify-between p-5 rounded-2xl border transition-all duration-300 ${
                     isCurrent
-                      ? "border-indigo-500 ring-2 ring-indigo-500/30 bg-indigo-500/5"
+                      ? "border-indigo-600 ring-2 ring-indigo-500/30 bg-indigo-50/80 dark:bg-indigo-500/5"
                       : isPopular
-                      ? "border-amber-500/50 bg-slate-900/60 shadow-lg"
+                      ? "border-amber-500/60 bg-amber-50/30 dark:bg-slate-900/60 shadow-lg"
                       : isDark
                       ? "border-slate-800 bg-slate-900/40 hover:border-slate-700"
-                      : "border-slate-200 bg-slate-50 hover:border-slate-300"
+                      : "border-slate-300 bg-slate-100 hover:border-slate-400"
                   }`}
                 >
                   {/* Badge */}
@@ -192,19 +192,19 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   )}
 
                   <div className="space-y-4">
-                    <div className="border-b border-slate-500/10 pb-4">
-                      <h3 className="font-bold text-base text-slate-100">{plan.name}</h3>
-                      <p className="text-[11px] text-slate-400 mt-1 min-h-[32px]">{plan.description}</p>
+                    <div className="border-b border-slate-300 dark:border-slate-500/10 pb-4">
+                      <h3 className="font-black text-base text-slate-900 dark:text-slate-100">{plan.name}</h3>
+                      <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300 mt-1 min-h-[32px]">{plan.description}</p>
                       <div className="mt-3 flex flex-col gap-1">
-                        <div className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
+                        <div className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">
                           {plan.priceQAR === 0 ? "Free / $0 USD" : `${plan.priceQAR} QR`}
                         </div>
                         {plan.priceQAR > 0 && (
                           <div className="flex items-center gap-2">
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-500/20">
                               💵 ${plan.priceUSD.toFixed(2)} USD
                             </span>
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-black bg-indigo-100 dark:bg-indigo-500/10 text-indigo-800 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-500/20">
                               🇶🇦 {plan.priceQAR} QAR
                             </span>
                           </div>
@@ -214,11 +214,11 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
                     {/* Features List */}
                     <div className="space-y-2">
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Plan Features</div>
+                      <div className="text-[10px] font-black uppercase tracking-wider text-slate-900 dark:text-slate-400">Plan Features</div>
                       <ul className="space-y-2 text-xs">
                         {plan.features.map((feat, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-slate-300 leading-tight">
-                            <Check size={13} className="text-emerald-400 shrink-0 mt-0.5" />
+                          <li key={idx} className="flex items-start gap-2 text-slate-900 dark:text-slate-200 font-bold leading-tight">
+                            <Check size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5 font-bold" />
                             <span>{feat}</span>
                           </li>
                         ))}
@@ -227,16 +227,16 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   </div>
 
                   {/* Action Button */}
-                  <div className="pt-6 mt-4 border-t border-slate-500/10">
+                  <div className="pt-6 mt-4 border-t border-slate-300 dark:border-slate-500/10">
                     <button
                       onClick={() => handleSelectPlan(planKey)}
                       disabled={isCurrent || isSubmitting}
-                      className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
+                      className={`w-full py-2.5 rounded-xl text-xs font-black transition-all shadow-md flex items-center justify-center gap-1.5 cursor-pointer ${
                         isCurrent
-                          ? "bg-slate-800 text-slate-400 cursor-default border border-slate-700"
+                          ? "bg-slate-300 text-slate-700 dark:bg-slate-800 dark:text-slate-400 cursor-default border border-slate-400 dark:border-slate-700"
                           : isPopular
                           ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30"
-                          : "bg-slate-800 hover:bg-slate-700 text-slate-200"
+                          : "bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
                       }`}
                     >
                       {isCurrent ? (
@@ -254,9 +254,9 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
           {/* Footer Security Guarantee */}
-          <div className="mt-8 pt-4 border-t border-slate-500/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3">
+          <div className="mt-8 pt-4 border-t border-slate-300 dark:border-slate-500/20 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-900 dark:text-slate-200 font-bold gap-3">
             <div className="flex items-center gap-1.5">
-              <Lock size={13} className="text-emerald-400" />
+              <Lock size={13} className="text-emerald-600 dark:text-emerald-400 font-bold" />
               <span>Secure Payment in Qatari Riyal (QAR). Cancel or upgrade anytime.</span>
             </div>
             <div className="flex items-center gap-3">

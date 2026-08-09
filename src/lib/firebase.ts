@@ -1,8 +1,9 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
+import firebaseAppletConfig from "../../firebase-applet-config.json";
 
-const firebaseConfig = {
+const firebaseConfig = firebaseAppletConfig || {
   apiKey: "AIzaSyD6JiZYZQE3tP3Opskq5Gshg34B-UAPbiA",
   authDomain: "joxiq-ai.firebaseapp.com",
   projectId: "joxiq-ai",
@@ -17,13 +18,15 @@ export const auth = getAuth(app);
 setPersistence(auth, browserLocalPersistence).catch((error) => {
   console.error("Auth persistence error:", error);
 });
-export const db = getFirestore(app);
+export const db = getFirestore(app, firebaseAppletConfig.firestoreDatabaseId || undefined);
 export { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc };
 export const googleProvider = new GoogleAuthProvider();
 
 export async function syncUserToFirestore(user: { uid?: string; email: string; displayName?: string; isPro?: boolean; plan?: "free" | "pro" | "annual" | "ultra" }) {
   try {
-    const userRef = doc(db, "users", user.email);
+    const docKey = user.uid || user.email;
+    if (!docKey) return;
+    const userRef = doc(db, "users", docKey);
     const snap = await getDoc(userRef);
 
     const defaultPlan = user.email === "mnain7674@gmail.com" ? "ultra" : user.plan || (user.isPro ? "pro" : "free");
@@ -50,6 +53,19 @@ export async function syncUserToFirestore(user: { uid?: string; email: string; d
       await updateDoc(userRef, {
         lastLogin: new Date().toISOString(),
       });
+    }
+
+    // Also sync to user.email if docKey was user.uid, for backward compatibility
+    if (user.uid && user.email && user.uid !== user.email) {
+      const emailRef = doc(db, "users", user.email);
+      await setDoc(emailRef, {
+        userId: user.uid,
+        id: user.uid,
+        name: user.displayName || user.email.split("@")[0],
+        email: user.email,
+        role: user.email === "mnain7674@gmail.com" ? "Owner Admin" : "Standard User",
+        lastLogin: new Date().toISOString(),
+      }, { merge: true }).catch(() => {});
     }
   } catch (error) {
     console.error("Error syncing user to Firestore:", error);

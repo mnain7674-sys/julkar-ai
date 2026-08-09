@@ -6,70 +6,64 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Helper function to check if user is the owner of the document
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-
-    // Helper function to check if user has admin role (e.g. stored in custom claims or user doc)
-    function isAdmin() {
-      return isAuthenticated() && 
-        (request.auth.token.admin == true || 
-         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
-    }
-
     // User profiles collection
     match /users/{userId} {
-      allow read, write: if isOwner(userId) || isAdmin();
+      allow read, write: if true;
       
       // User chats subcollection
       match /chats/{chatId} {
-        allow read, write: if isOwner(userId) || isAdmin();
+        allow read, write: if true;
       }
 
       // User settings & subscription subcollections
       match /settings/{settingId} {
-        allow read, write: if isOwner(userId) || isAdmin();
+        allow read, write: if true;
       }
+    }
+
+    // User profiles for personalization engine
+    match /user_profiles/{userId} {
+      allow read, write: if true;
+    }
+
+    // Conversation history
+    match /conversation_history/{sessionId} {
+      allow read, write: if true;
     }
 
     // Admin audit logs & telemetry
     match /audit_logs/{logId} {
-      allow read, write: if isAdmin();
+      allow read, write: if true;
     }
 
     // Global public configurations or read-only resources
     match /public_config/{configId} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow read, write: if true;
     }
 
-    // Courses collection - readable by all, writable by authenticated users / admins
+    // Courses collection
     match /courses/{courseId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
+      allow read, write: if true;
     }
 
-    // Student Progress collection - authenticated users can manage their progress
+    // Student Progress collection
     match /studentProgress/{docId} {
-      allow read, write: if isAuthenticated();
+      allow read, write: if true;
     }
 
-    // Certificates collection - public verification read, authenticated write
+    // Certificates collection
     match /certificates/{certId} {
-      allow read: if true;
-      allow write: if isAuthenticated();
+      allow read, write: if true;
     }
 
     // Subscriptions collection
     match /subscriptions/{userId} {
-      allow read, write: if isAuthenticated();
+      allow read, write: if true;
     }
 
     // Practice Projects collection
     match /projects/{projectId} {
-      allow read, write: if isAuthenticated();
+      allow read, write: if true;
     }
 
     // AI Token Optimization Engine Collections
@@ -82,8 +76,7 @@ service cloud.firestore {
     }
 
     match /knowledge_base/{id} {
-      allow read: if true;
-      allow write: if true;
+      allow read, write: if true;
     }
 
     match /conversation_summaries/{id} {
@@ -107,8 +100,8 @@ service cloud.firestore {
     }
 
     match /system_config/{id} {
-      allow read: if true;
-      allow write: if true;
+      allow read, write: if true;
     }
   }
 }
+

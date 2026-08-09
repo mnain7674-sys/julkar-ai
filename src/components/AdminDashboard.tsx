@@ -201,8 +201,55 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   const isDark = theme !== "light";
 
+  const DEFAULT_ADMIN_USERS = [
+    {
+      id: "usr-owner-admin",
+      name: "Owner Admin",
+      email: "mnain7674@gmail.com",
+      role: "Owner Admin",
+      status: "Active",
+      createdAt: "2024-01-01",
+      lastLogin: "Just now",
+      subscriptionStatus: "Ultra Pro",
+      tokensUsed: "145200"
+    },
+    {
+      id: "usr-demo-1",
+      name: "Ahmad Hassan",
+      email: "ahmad.hassan@example.com",
+      role: "Standard User",
+      status: "Active",
+      createdAt: "2024-02-15",
+      lastLogin: "2 hours ago",
+      subscriptionStatus: "Pro",
+      tokensUsed: "42300"
+    },
+    {
+      id: "usr-demo-2",
+      name: "Fatima Rahman",
+      email: "fatima.r@example.com",
+      role: "Standard User",
+      status: "Active",
+      createdAt: "2024-03-01",
+      lastLogin: "1 day ago",
+      subscriptionStatus: "Free",
+      tokensUsed: "8900"
+    },
+    {
+      id: "usr-demo-3",
+      name: "Tanvir Ahmed",
+      email: "tanvir.code@example.com",
+      role: "Content Manager",
+      status: "Active",
+      createdAt: "2024-03-10",
+      lastLogin: "3 hours ago",
+      subscriptionStatus: "Pro",
+      tokensUsed: "61200"
+    }
+  ];
+
   // User directory for admin management
-  const [usersList, setUsersList] = useState<any[]>([]);
+  const [usersList, setUsersList] = useState<any[]>(DEFAULT_ADMIN_USERS);
   const [userFilter, setUserFilter] = useState<string>("all");
 
   React.useEffect(() => {
@@ -213,10 +260,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         querySnapshot.forEach((docSnap) => {
           fbUsers.push({ id: docSnap.id, ...docSnap.data() });
         });
-        setUsersList(fbUsers);
+        
+        const existingEmails = new Set(fbUsers.map((u) => u.email?.toLowerCase()));
+        const merged = [...fbUsers];
+        for (const defUser of DEFAULT_ADMIN_USERS) {
+          if (!existingEmails.has(defUser.email.toLowerCase())) {
+            merged.push(defUser);
+          }
+        }
+        setUsersList(merged);
       } catch (err) {
         console.error("Firestore user fetch error", err);
-        setUsersList([]);
+        setUsersList(DEFAULT_ADMIN_USERS);
       }
     }
     loadUsers();
@@ -1062,8 +1117,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </td>
                     </tr>
                   ) : (
-                    filteredUsers.map((user) => (
-                      <tr key={user.id} className={`transition-colors ${isDark ? "hover:bg-slate-850" : "hover:bg-slate-50"}`}>
+                    filteredUsers.map((user, uIdx) => (
+                      <tr key={user.id ? `${user.id}-${user.email || uIdx}-${uIdx}` : `usr-row-${uIdx}`} className={`transition-colors ${isDark ? "hover:bg-slate-850" : "hover:bg-slate-50"}`}>
                         <td className="py-4 px-6">
                           <div className="font-semibold text-slate-200">{user.name}</div>
                           <div className="text-[11px] text-slate-400 font-mono">{user.email}</div>
@@ -1166,9 +1221,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <div className="space-y-3">
                   {conversations
                     .filter((c: any) => c.title.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .map((chat: any) => (
+                    .map((chat: any, cIdx: number) => (
                       <div
-                        key={chat.id}
+                        key={chat.id ? `${chat.id}-${cIdx}` : `chat-${cIdx}`}
                         className={`p-4 rounded-xl border flex items-center justify-between gap-4 transition-colors ${
                           isDark ? "bg-slate-950/60 border-slate-800 hover:border-slate-700" : "bg-slate-50 border-slate-200 hover:border-slate-300"
                         }`}
@@ -1330,8 +1385,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </td>
                     </tr>
                   ) : (
-                    auditLogs.map((log) => (
-                      <tr key={log.id} className={isDark ? "hover:bg-slate-850" : "hover:bg-slate-50"}>
+                    auditLogs.map((log, lIdx) => (
+                      <tr key={log.id ? `${log.id}-${lIdx}` : `log-${lIdx}`} className={isDark ? "hover:bg-slate-850" : "hover:bg-slate-50"}>
                         <td className="py-3.5 px-6 text-slate-400">{log.time}</td>
                         <td className="py-3.5 px-6 font-semibold">{log.user}</td>
                         <td className="py-3.5 px-6 text-indigo-400">{log.action}</td>

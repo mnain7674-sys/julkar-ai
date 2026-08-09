@@ -36,34 +36,28 @@ html.dark, html.dark body {
   box-sizing: inherit;
 }
 
-/* Force high contrast bright text in dark mode markdown & prose */
-.dark-mode-text *, .prose-invert, .prose-invert p, .prose-invert li, .prose-invert strong, .prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4 {
-  color: #ffffff !important;
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
 }
 
-/* Force solid deep black text in light mode for all markdown AI responses and options */
-html:not(.dark) .markdown-body,
-html:not(.dark) .markdown-body p,
-html:not(.dark) .markdown-body li,
-html:not(.dark) .markdown-body h1,
-html:not(.dark) .markdown-body h2,
-html:not(.dark) .markdown-body h3,
-html:not(.dark) .markdown-body h4,
-html:not(.dark) .markdown-body h5,
-html:not(.dark) .markdown-body h6,
-html:not(.dark) .markdown-body strong,
-html:not(.dark) .markdown-body em,
-html:not(.dark) .markdown-body td,
-html:not(.dark) .markdown-body th,
-html:not(.dark) .markdown-body blockquote,
-html:not(.dark) .markdown-body span:not([class*="text-indigo"]):not([class*="text-emerald"]):not([class*="text-rose"]):not([class*="text-amber"]):not([class*="text-green"]) {
-  color: #000000 !important;
-}
-
-/* Light theme action buttons & options below AI messages */
-html:not(.dark) footer button,
-html:not(.dark) footer input,
-html:not(.dark) footer textarea {
+/* Default markdown contrast */
+html:not(.dark) .markdown-body {
   color: #0f172a;
+}
+
+html.dark .markdown-body {
+  color: #f1f5f9;
 }
 
