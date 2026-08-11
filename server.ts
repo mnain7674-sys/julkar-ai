@@ -3,6 +3,8 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 import dotenv from "dotenv";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import Stripe from "stripe";

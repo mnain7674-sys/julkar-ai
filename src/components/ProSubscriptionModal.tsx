@@ -98,7 +98,7 @@ export function ProSubscriptionModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
       <div className={`relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-6 md:p-8 shadow-2xl border transition-all ${
-        isDark ? "bg-[#0b1329] border-white/20 text-white" : "bg-white border-slate-300 text-slate-900"
+        isDark ? "bg-black border-zinc-800 text-white" : "bg-white border-slate-300 text-slate-900"
       }`}>
         {/* Close Button */}
         <button

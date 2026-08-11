@@ -15,11 +15,11 @@ html, body {
   box-sizing: border-box;
   overflow: hidden;
   background-color: #ffffff;
-  color: #0f172a;
+  color: #000000;
 }
 
 html.dark, html.dark body {
-  background-color: #050b18;
+  background-color: #000000;
   color: #f8fafc;
 }
 

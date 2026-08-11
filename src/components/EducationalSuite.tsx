@@ -579,14 +579,14 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
       
       {/* Dynamic Sub Tab Navigation */}
       <div className={`flex items-center gap-1.5 p-1 rounded-2xl mb-5 w-fit ${
-        theme === "dark" ? "bg-white/[0.03] border border-white/5" : "bg-slate-200/50 border border-slate-200/40"
+        theme === "dark" ? "bg-white/[0.03] border border-white/5" : "bg-slate-200 border border-slate-300 shadow-xs"
       }`}>
         <button
           onClick={() => setActiveTab("teacher")}
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "teacher"
               ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "text-slate-500 hover:text-indigo-500"
+              : "text-slate-900 hover:text-indigo-600 dark:text-slate-300"
           }`}
         >
           <GraduationCap size={14} />
@@ -598,7 +598,7 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "exam"
               ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "text-slate-500 hover:text-indigo-500"
+              : "text-slate-900 hover:text-indigo-600 dark:text-slate-300"
           }`}
         >
           <FileText size={14} />
@@ -610,7 +610,7 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "goals"
               ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "text-slate-500 hover:text-indigo-500"
+              : "text-slate-900 hover:text-indigo-600 dark:text-slate-300"
           }`}
         >
           <Target size={14} />
@@ -622,7 +622,7 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "voice"
               ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "text-slate-500 hover:text-indigo-500"
+              : "text-slate-900 hover:text-indigo-600 dark:text-slate-300"
           }`}
         >
           <Mic size={14} />
@@ -634,7 +634,7 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
           className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
             activeTab === "photo"
               ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/20"
-              : "text-slate-500 hover:text-indigo-500"
+              : "text-slate-900 hover:text-indigo-600 dark:text-slate-300"
           }`}
         >
           <Camera size={14} />
@@ -872,7 +872,7 @@ Use clear headers, bullet points, and clean high-contrast Markdown formatting. R
                       {/* Score Checker Advice Explainer */}
                       {quizAnswered && (
                         <div className={`p-4 rounded-xl border flex items-start gap-3 mt-4 ${
-                          theme === "dark" ? "bg-[#090f1d] border-[#162137]" : "bg-indigo-50/40 border-indigo-100"
+                          theme === "dark" ? "bg-black border-zinc-800" : "bg-indigo-50/40 border-indigo-100"
                         }`}>
                           <HelpCircle className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
                           <div className="space-y-1">
