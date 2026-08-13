@@ -627,6 +627,7 @@ export default function App() {
   // Sync theme changes & auto-sync across users/sessions
   useEffect(() => {
     localStorage.setItem("gemini_theme", theme);
+    document.documentElement.setAttribute("data-theme", theme);
     if (theme === "light") {
       document.documentElement.classList.remove("dark");
       document.body.classList.remove("dark");
@@ -1769,7 +1770,7 @@ export default function App() {
   return (
     <div
       className={`relative w-full h-[100dvh] min-h-screen flex overflow-hidden font-sans transition-colors duration-300 selection:bg-indigo-500/30 ${
-        theme === "light" ? "bg-white text-black" : "bg-black text-slate-200 dark"
+        theme === "light" ? "bg-white text-black" : "bg-[#111111] text-white dark"
       }`}
       style={isKeyboardOpen && viewportHeight !== null && viewportHeight > 200 ? { height: `${viewportHeight}px` } : undefined}
     >
