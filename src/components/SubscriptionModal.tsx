@@ -86,7 +86,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className={`relative w-full max-w-5xl rounded-3xl border shadow-2xl p-6 sm:p-8 z-50 my-auto ${
+          className={`relative w-full max-w-5xl rounded-3xl border shadow-2xl p-6 sm:p-8 z-50 my-auto subscription-modal-container ${
             isDark ? "bg-slate-950 border-slate-800 text-slate-100" : "bg-white border-slate-200 text-slate-900"
           }`}
         >

@@ -81,19 +81,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Explicit endpoint for image assets (logo, mobile app assets) to guarantee access across environments
+// Explicit endpoint for image assets (mobile app assets) to guarantee access across environments
 app.get([
-  "/logo.png",
-  "/favicon.ico",
-  "/favicon.png",
-  "/logo.jpg",
-  "/logo.jpeg",
-  "/public/logo.png",
-  "/src/logo.png",
-  "/joxiq-ai/logo.png",
-  "/joxiq-ai/favicon.png",
-  "/joxiq-ai/logo.jpg",
-  "/joxiq-ai/logo.jpeg",
   "/mobile-app/assets/:file",
   "/public/*",
   "/assets/*"
@@ -109,10 +98,6 @@ app.get([
     path.join(process.cwd(), "src", fileName),
     path.join(process.cwd(), "mobile-app", "assets", fileName),
     path.join(process.cwd(), reqPath),
-    path.join(process.cwd(), "public", "logo.png"),
-    path.join(process.cwd(), "src", "logo.png"),
-    path.join(process.cwd(), "logo.png"),
-    path.join(process.cwd(), "dist", "logo.png"),
   ];
   
   for (const p of possiblePaths) {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Sparkles, Check, Zap, Shield, Crown, X, CreditCard, Lock, Calendar, QrCode, Smartphone } from "lucide-react";
+import { Sparkles, Check, Zap, Shield, Crown, X, CreditCard, Lock, Calendar } from "lucide-react";
 
 interface ProSubscriptionModalProps {
   isOpen: boolean;
@@ -23,7 +23,7 @@ export function ProSubscriptionModal({
   userTokensUsed = 0,
 }: ProSubscriptionModalProps) {
   const [selectedPlan, setSelectedPlan] = useState<"monthly" | "yearly" | "ultra">("monthly");
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"visa" | "mastercard" | "amex" | "apple_pay" | "google_pay" | "paypal" | "qr_code">("visa");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<"visa" | "mastercard" | "apple_pay" | "google_pay" | "paypal">("visa");
   const [cardNumber, setCardNumber] = useState("");
   const [cardHolder, setCardHolder] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -35,7 +35,7 @@ export function ProSubscriptionModal({
   if (!isOpen) return null;
 
   const handleSubscribe = async () => {
-    if (selectedPaymentMethod === "visa" || selectedPaymentMethod === "mastercard" || selectedPaymentMethod === "amex") {
+    if (selectedPaymentMethod === "visa" || selectedPaymentMethod === "mastercard") {
       if (!cardNumber || cardNumber.replace(/\s/g, "").length < 15) {
         setErrorMsg("Please enter a valid card number.");
         return;
@@ -97,7 +97,7 @@ export function ProSubscriptionModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-fadeIn">
-      <div className={`relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-6 md:p-8 shadow-2xl border transition-all ${
+      <div className={`relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl p-5 sm:p-6 md:p-8 shadow-2xl border transition-all pro-subscription-modal ${
         isDark ? "bg-black border-zinc-800 text-white" : "bg-white border-slate-300 text-slate-900"
       }`}>
         {/* Close Button */}
@@ -255,15 +255,13 @@ export function ProSubscriptionModal({
                 </div>
               )}
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-2.5">
                 {[
                   { id: "visa", label: "Visa", icon: "💳" },
                   { id: "mastercard", label: "Mastercard", icon: "💳" },
-                  { id: "qr_code", label: "Scan QR Code", icon: "📱" },
                   { id: "apple_pay", label: "Apple Pay", icon: "" },
                   { id: "google_pay", label: "Google Pay", icon: "G" },
                   { id: "paypal", label: "PayPal", icon: "P" },
-                  { id: "amex", label: "Amex", icon: "💳" },
                 ].map((method) => (
                   <button
                     key={method.id}
@@ -291,37 +289,7 @@ export function ProSubscriptionModal({
                   <span className="text-xs font-black text-indigo-950 bg-indigo-100 border border-indigo-300 dark:text-indigo-200 dark:bg-indigo-500/30 px-2.5 py-1 rounded-full">{planName} — {planPriceQAR} ({planPriceUSD})</span>
                 </div>
 
-                {selectedPaymentMethod === "qr_code" ? (
-                  /* QR Code Instant Scan Payment Display */
-                  <div className="py-2 text-center flex flex-col items-center justify-center gap-3">
-                    <div className="p-3 bg-white rounded-2xl shadow-xl border border-slate-300 inline-block relative group">
-                      {/* Render visual vector QR code */}
-                      <svg className="w-36 h-36 text-black" viewBox="0 0 100 100" fill="currentColor">
-                        <path d="M0,0 h35 v35 h-35 z M5,5 v25 h25 v-25 z M10,10 h15 v15 h-15 z" />
-                        <path d="M65,0 h35 v35 h-35 z M70,5 v25 h25 v-25 z M75,10 h15 v15 h-15 z" />
-                        <path d="M0,65 h35 v35 h-35 z M5,70 v25 h25 v-25 z M10,75 h15 v15 h-15 z" />
-                        <path d="M40,5 h10 v10 h-10 z M50,15 h10 v10 h-10 z M40,25 h10 v10 h-10 z" />
-                        <path d="M65,40 h10 v10 h-10 z M75,50 h10 v10 h-10 z M85,40 h15 v10 h-15 z M65,60 h15 v10 h-15 z" />
-                        <path d="M40,65 h10 v10 h-10 z M50,75 h10 v20 h-10 z M40,85 h20 v10 h-20 z" />
-                        <path d="M65,75 h10 v10 h-10 z M80,75 h20 v20 h-20 z" />
-                        <circle cx="50" cy="50" r="8" fill="#4f46e5" />
-                      </svg>
-                      <div className="mt-2 text-[10px] font-mono font-black text-black bg-slate-200 py-1 px-2 rounded">
-                        PAY-REF: JOXIQ-{selectedPlan.toUpperCase()}-2026
-                      </div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="text-xs font-black text-slate-950 dark:text-white flex items-center justify-center gap-1.5">
-                        <Smartphone size={15} className="text-indigo-600 dark:text-indigo-300" />
-                        Scan QR Code to Pay {planPriceQAR} / {planPriceUSD}
-                      </div>
-                      <p className="text-xs font-bold text-slate-800 dark:text-slate-200 max-w-sm mx-auto">
-                        Use QNB Mobile, bKash, Nagad, Apple Camera, or any QR reader app. Your account will automatically activate upon confirmation.
-                      </p>
-                    </div>
-                  </div>
-                ) : (selectedPaymentMethod === "visa" || selectedPaymentMethod === "mastercard" || selectedPaymentMethod === "amex") ? (
+                {(selectedPaymentMethod === "visa" || selectedPaymentMethod === "mastercard") ? (
                   <div className="space-y-3">
                     <div>
                       <label className="block text-xs font-black text-slate-950 dark:text-white uppercase tracking-wider mb-1.5">Cardholder Name</label>
@@ -418,11 +386,6 @@ export function ProSubscriptionModal({
               >
                 {isProcessing ? (
                   <>Processing Secure Payment...</>
-                ) : selectedPaymentMethod === "qr_code" ? (
-                  <>
-                    <QrCode size={16} />
-                    I Have Scanned & Paid ({planPriceFull})
-                  </>
                 ) : (
                   <>
                     <Lock size={16} />

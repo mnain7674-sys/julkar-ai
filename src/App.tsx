@@ -82,7 +82,6 @@ import { EducationalSuite } from "./components/EducationalSuite";
 import { ProSubscriptionModal } from "./components/ProSubscriptionModal";
 import { AdminDashboard } from "./components/AdminDashboard";
 import { ChatHistoryModal } from "./components/ChatHistoryModal";
-import { JoxiqLogo } from "./components/JoxiqLogo";
 import {
   saveChatToFirestore,
   loadUserChatsFromFirestore,
@@ -195,7 +194,7 @@ export default function App() {
     if (saved && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(saved)) {
       return saved as any;
     }
-    return "dark";
+    return "light";
   });
   const isDark = theme !== "light";
 
@@ -236,8 +235,6 @@ export default function App() {
   const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
   const [activeMoreMenuMsgId, setActiveMoreMenuMsgId] = useState<string | null>(null);
   const [paymentToast, setPaymentToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
-  const [userLogoError, setUserLogoError] = useState<boolean>(false);
-  const [joxiqLogoError, setJoxiqLogoError] = useState<boolean>(false);
 
   // --- Sidebar & ChatGPT Style Chat History States ---
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState<string>("");
@@ -463,8 +460,8 @@ export default function App() {
     if (savedTheme && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(savedTheme)) {
       setTheme(savedTheme as any);
     } else {
-      setTheme("dark");
-      localStorage.setItem("gemini_theme", "dark");
+      setTheme("light");
+      localStorage.setItem("gemini_theme", "light");
     }
 
     if (saved) {
@@ -1795,8 +1792,6 @@ export default function App() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="relative flex flex-col items-center justify-center space-y-4 text-center z-10"
             >
-              <JoxiqLogo theme={theme} className="w-28 h-28 sm:w-32 sm:h-32 shadow-2xl shadow-indigo-500/30" />
-
               <div className="space-y-1">
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-300">
                   JOXIQ AI
@@ -1860,7 +1855,6 @@ export default function App() {
             className="flex items-center gap-2 cursor-pointer group"
             title="Return to Home"
           >
-            <JoxiqLogo theme={theme} className="w-11 h-11 shadow-sm group-hover:scale-105 transition-transform" />
             <span className="font-extrabold text-base tracking-tight text-slate-900 dark:text-white">JOXIQ AI</span>
           </div>
           <button
@@ -2250,7 +2244,7 @@ export default function App() {
               id="btn-sidebar-toggle"
               onClick={() => setSidebarOpen(prev => !prev)}
               className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all cursor-pointer ${
-                theme === "dark" ? "bg-white/5 border-white/10 text-slate-200 hover:bg-white/10" : "bg-slate-100 border-slate-300 text-slate-900 hover:bg-slate-200 font-bold"
+                theme === "dark" ? "bg-white/5 border-white/10 text-slate-200 hover:bg-white/10" : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
               }`}
               title="Toggle Sidebar Menu"
             >
@@ -2298,14 +2292,7 @@ export default function App() {
                 /* Starter welcome dashboard */
                 <div className="max-w-3xl mx-auto w-full flex flex-col items-center justify-center py-4 sm:py-8 px-4 space-y-3">
                   <div className="text-center space-y-2">
-                    <motion.div
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.4 }}
-                      className="mx-auto flex items-center justify-center mb-2"
-                    >
-                      <JoxiqLogo theme={theme} className="w-16 h-16 sm:w-20 sm:h-20 shadow-lg shadow-indigo-500/20" />
-                    </motion.div>
+
                     <h1 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mt-3 ${
                       isDark ? "text-white" : "text-slate-900"
                     }`}>
@@ -2397,15 +2384,15 @@ export default function App() {
                     <div className={`flex flex-col gap-2 ${isUser ? "items-end max-w-[85%] md:max-w-[75%]" : "flex-1 min-w-0"}`}>
                       {isUser ? (
                         <div
-                          className={`rounded-2xl rounded-br-sm px-4 py-3 text-sm md:text-base leading-relaxed border shadow-md transition-all ${
+                          className={`user-message user-message-bubble rounded-2xl rounded-tr-xs px-4 py-3 text-sm md:text-base leading-relaxed border transition-all ${
                             isDark
-                              ? "bg-black border-zinc-800 text-white shadow-black/80"
-                              : "bg-black border-zinc-900 text-white shadow-slate-900/20"
+                              ? "bg-sky-950/80 border-sky-800/60 text-sky-100 shadow-xs"
+                              : "bg-[#DBEAFE] border-[#BFDBFE] text-[#111827] shadow-xs"
                           }`}
                         >
                           {/* Inline attached images if present in message history */}
                           {msg.image && (
-                            <div className="mb-3 max-w-sm rounded-lg overflow-hidden border border-slate-200 dark:border-white/20 shadow-sm bg-black/40">
+                            <div className="mb-3 max-w-sm rounded-lg overflow-hidden border border-blue-300 dark:border-white/20 shadow-xs bg-white/90 dark:bg-black/40">
                               <img
                                 src={msg.image.data}
                                 alt="User uploaded attachment"
@@ -2420,23 +2407,23 @@ export default function App() {
                             <div className={`mb-3 flex items-center gap-2.5 p-2 rounded-xl border max-w-md ${
                               isDark
                                 ? "bg-black/30 border-white/10 text-slate-200"
-                                : "bg-slate-100/80 border-slate-200 text-slate-800"
+                                : "bg-white/90 border-blue-300 text-[#111827] font-semibold"
                             }`}>
-                              <FileText size={18} className="text-indigo-500 dark:text-indigo-400 shrink-0" />
+                              <FileText size={18} className="text-blue-700 dark:text-sky-400 shrink-0" />
                               <div className="flex-1 min-w-0 text-left">
-                                <div className="text-xs font-semibold truncate">{msg.document.name}</div>
-                                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">Parsed Document - {msg.document.size}</div>
+                                <div className="text-xs font-semibold truncate text-[#111827] dark:text-slate-100">{msg.document.name}</div>
+                                <div className="text-[10px] text-slate-600 dark:text-slate-400 font-mono mt-0.5">Parsed Document - {msg.document.size}</div>
                               </div>
                             </div>
                           )}
 
-                          <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                          <div className="whitespace-pre-wrap break-words font-medium text-[#111827] dark:text-sky-100">{msg.content}</div>
                         </div>
                       ) : (
-                        <div className="text-black dark:text-slate-100 space-y-3 text-sm md:text-base leading-relaxed w-full">
+                        <div className="ai-message assistant-message markdown prose text-[#111827] dark:text-slate-100 space-y-3 text-sm md:text-base leading-relaxed w-full">
                           {/* Inline attached images if present in message history */}
                           {msg.image && (
-                            <div className="mb-3 max-w-sm rounded-lg overflow-hidden border border-white/10 shadow-sm bg-black/40">
+                            <div className="mb-3 max-w-sm rounded-lg overflow-hidden border border-slate-300 dark:border-white/10 shadow-xs bg-slate-50 dark:bg-black/40">
                               <img
                                 src={msg.image.data}
                                 alt="User uploaded attachment"
@@ -2449,12 +2436,12 @@ export default function App() {
                           {/* Inline attached documents info */}
                           {msg.document && (
                             <div className={`mb-3 flex items-center gap-2.5 p-2.5 border rounded-xl max-w-md ${
-                              isDark ? "bg-black/20 border-white/10 text-slate-200" : "bg-slate-50 border-slate-200 text-slate-800"
+                              isDark ? "bg-black/20 border-white/10 text-slate-200" : "bg-slate-100 border-slate-300 text-[#111827] font-medium"
                             }`}>
-                              <FileText size={18} className="text-indigo-500 shrink-0" />
+                              <FileText size={18} className="text-indigo-600 shrink-0" />
                               <div className="flex-1 min-w-0 text-left">
-                                <div className="text-xs font-semibold truncate">{msg.document.name}</div>
-                                <div className="text-[10px] text-slate-500 font-mono mt-0.5">Parsed Document - {msg.document.size}</div>
+                                <div className="text-xs font-semibold truncate text-[#111827] dark:text-slate-100">{msg.document.name}</div>
+                                <div className="text-[10px] text-slate-600 dark:text-slate-400 font-mono mt-0.5">Parsed Document - {msg.document.size}</div>
                               </div>
                             </div>
                           )}
@@ -2464,8 +2451,8 @@ export default function App() {
 
                           {/* Grounding Citations Panel */}
                           {msg.grounding && msg.grounding.chunks && msg.grounding.chunks.length > 0 && (
-                            <div className="mt-4 pt-4 border-t border-slate-200/50 dark:border-white/10 space-y-2">
-                              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-500 dark:text-emerald-400">
+                            <div className="mt-4 pt-3 border-t border-slate-300 dark:border-white/10 space-y-2">
+                              <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400">
                                 <Globe size={13} />
                                 <span>Grounding Search Sources:</span>
                               </div>
@@ -2479,21 +2466,21 @@ export default function App() {
                                       target="_blank"
                                       rel="noreferrer"
                                       className={`flex items-start gap-2 p-2 border rounded-lg text-xs transition-colors group truncate ${
-                                        isDark ? "bg-white/[0.03] hover:bg-white/[0.06] border-white/5 text-slate-300" : "bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-700"
+                                        isDark ? "bg-white/[0.03] hover:bg-white/[0.06] border-white/5 text-slate-300" : "bg-slate-50 hover:bg-slate-100 border-slate-300 text-[#111827]"
                                       }`}
                                     >
-                                      <div className="bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono">
+                                      <div className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono">
                                         {cidx + 1}
                                       </div>
                                       <div className="flex-1 min-w-0">
-                                        <div className="font-semibold truncate group-hover:text-indigo-500 transition-colors text-left">
+                                        <div className="font-semibold truncate text-[#111827] dark:text-slate-100 group-hover:text-indigo-600 transition-colors text-left">
                                           {chunk.web.title || "Web Source"}
                                         </div>
-                                        <div className="text-[10px] text-slate-500 truncate mt-0.5 text-left">
+                                        <div className="text-[10px] text-slate-600 truncate mt-0.5 text-left">
                                           {chunk.web.uri}
                                         </div>
                                       </div>
-                                      <ExternalLink size={10} className="text-slate-500 group-hover:text-indigo-500 shrink-0 mt-0.5" />
+                                      <ExternalLink size={10} className="text-slate-500 group-hover:text-indigo-600 shrink-0 mt-0.5" />
                                     </a>
                                   );
                                 })}
@@ -2505,11 +2492,11 @@ export default function App() {
 
                       {/* Message metadata line and audio controls */}
                       <div
-                        className={`flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-slate-300 px-1 mt-1 ${
+                        className={`flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400 px-1 mt-1 ${
                           isUser ? "justify-end" : "justify-start"
                         }`}
                       >
-                        <span className="text-slate-900 dark:text-slate-300 font-bold">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">
                           {new Date(msg.timestamp).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -2520,7 +2507,7 @@ export default function App() {
                             onClick={() => handleSpeakTts(msg)}
                             disabled={isGeneratingTts && activeSpeechMsgId !== msg.id}
                             className={`p-1 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-indigo-600 transition-colors cursor-pointer ${
-                              activeSpeechMsgId === msg.id ? "text-indigo-600" : "text-slate-900 dark:text-slate-300"
+                              activeSpeechMsgId === msg.id ? "text-indigo-600" : "text-slate-600 dark:text-slate-400"
                             }`}
                             title={
                               activeSpeechMsgId === msg.id
@@ -2546,23 +2533,23 @@ export default function App() {
 
                       {/* ChatGPT/Claude Clean Action Toolbar (Assistant Only) */}
                       {!isUser && (
-                        <div className="flex items-center gap-1 mt-2 text-xs text-slate-900 dark:text-slate-300 font-bold relative">
+                        <div className="flex items-center gap-1 mt-1.5 text-xs text-slate-600 dark:text-slate-400 font-medium relative">
                           {/* Copy Button */}
                           <button
                             onClick={() => copyMessageText(msg)}
-                            className="p-1.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-300 hover:text-black dark:hover:text-white font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                            className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors cursor-pointer flex items-center gap-1.5"
                             title={copiedMsgId === msg.id ? "Copied to clipboard!" : "Copy response"}
                             aria-label="Copy response"
                           >
                             {copiedMsgId === msg.id ? (
                               <>
-                                <Check size={15} className="text-emerald-600 dark:text-emerald-400 font-bold" />
-                                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-bold">Copied</span>
+                                <Check size={14} className="text-emerald-600 dark:text-emerald-400 font-bold" />
+                                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Copied</span>
                               </>
                             ) : (
                               <>
-                                <Copy size={15} />
-                                <span className="text-xs font-bold">Copy</span>
+                                <Copy size={14} />
+                                <span className="text-xs font-medium">Copy</span>
                               </>
                             )}
                           </button>
@@ -2573,12 +2560,12 @@ export default function App() {
                             className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
                               msg.rating === "like"
                                 ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-400 font-bold"
-                                : "hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-300 hover:text-black dark:hover:text-white"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                             }`}
                             title="Like response"
                             aria-label="Like response"
                           >
-                            <ThumbsUp size={15} className={msg.rating === "like" ? "fill-emerald-600 dark:fill-emerald-400" : ""} />
+                            <ThumbsUp size={14} className={msg.rating === "like" ? "fill-emerald-600 dark:fill-emerald-400" : ""} />
                           </button>
 
                           {/* Dislike Button */}
@@ -2587,12 +2574,12 @@ export default function App() {
                             className={`p-1.5 rounded-md transition-colors cursor-pointer flex items-center gap-1 ${
                               msg.rating === "dislike"
                                 ? "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-400 font-bold"
-                                : "hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-300 hover:text-black dark:hover:text-white"
+                                : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                             }`}
                             title="Dislike response"
                             aria-label="Dislike response"
                           >
-                            <ThumbsDown size={15} className={msg.rating === "dislike" ? "fill-rose-600 dark:fill-rose-400" : ""} />
+                            <ThumbsDown size={14} className={msg.rating === "dislike" ? "fill-rose-600 dark:fill-rose-400" : ""} />
                           </button>
 
                           {/* Share Button */}
@@ -2721,21 +2708,21 @@ export default function App() {
                     <Bot size={18} className="animate-pulse" />
                   </div>
                   <div className="flex flex-col gap-2 flex-1 min-w-0">
-                    <div className="text-black dark:text-slate-100 space-y-3 text-sm md:text-base leading-relaxed w-full">
+                    <div className="ai-message assistant-message markdown prose text-[#111827] dark:text-slate-100 space-y-3 text-sm md:text-base leading-relaxed w-full">
                       <div>
                         <MarkdownMessage content={currentStreamText} />
-                        <span className="inline-block w-2 h-4 ml-1 bg-slate-800 dark:bg-slate-200 animate-pulse align-middle rounded-xs" />
+                        <span className="inline-block w-2 h-4 ml-1 bg-slate-900 dark:bg-slate-200 animate-pulse align-middle rounded-xs" />
                       </div>
 
                       {/* Streaming search citation query bubble if active */}
                       {currentGrounding && currentGrounding.queries && currentGrounding.queries.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-slate-200/50 dark:border-white/10 flex items-center gap-2 text-xs text-indigo-400 font-mono">
+                        <div className="mt-3 pt-3 border-t border-slate-300 dark:border-white/10 flex items-center gap-2 text-xs text-indigo-700 dark:text-indigo-400 font-mono font-semibold">
                           <Search size={12} className="animate-pulse" />
                           <span>Searching: "{currentGrounding.queries.join(", ")}"...</span>
                         </div>
                       )}
                     </div>
-                    <div className="text-[10px] text-slate-400 dark:text-slate-500 px-1">
+                    <div className="text-[11px] text-slate-600 dark:text-slate-400 font-medium px-1">
                       <span>Writing response...</span>
                     </div>
                   </div>
@@ -2745,44 +2732,48 @@ export default function App() {
               {/* Glowing breathing loader if streaming started but text hasn't arrived */}
               {isStreaming && !currentStreamText && (
                 <div className="flex items-start gap-4 justify-start w-full">
-                  <div className="w-8 h-8 rounded-full bg-indigo-600/30 border border-indigo-500/30 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
-                    <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                  <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-600/30 border border-indigo-300 dark:border-indigo-500/30 flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                    <Loader2 className="w-4 h-4 text-indigo-600 dark:text-indigo-400 animate-spin" />
                   </div>
                   <div className="flex items-center space-x-1.5 py-2">
-                    <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <div className="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-bounce" />
+                    <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <div className="w-2.5 h-2.5 bg-indigo-600 rounded-full animate-bounce" />
                   </div>
                 </div>
               )}
 
               {/* Stream API error dialog info */}
               {streamError && (
-                <div className="p-4 rounded-xl border border-rose-500/20 bg-rose-500/10 text-rose-300 text-sm flex items-start gap-3 relative group">
-                  <Info size={18} className="shrink-0 mt-0.5" />
+                <div className={`p-4 rounded-xl border text-sm flex items-start gap-3 relative group ${
+                  isDark
+                    ? "border-rose-500/20 bg-rose-500/10 text-rose-300"
+                    : "border-rose-300 bg-rose-50 text-rose-950 font-medium shadow-xs"
+                }`}>
+                  <Info size={18} className="shrink-0 mt-0.5 text-rose-600 dark:text-rose-400" />
                   <div className="flex-1">
-                    <div className="font-semibold flex items-center justify-between">
+                    <div className="font-bold flex items-center justify-between text-rose-950 dark:text-rose-200">
                       <span>Stream Error</span>
                       <button
                         onClick={() => setStreamError(null)}
-                        className="text-rose-400 hover:text-rose-200 transition-colors p-1 rounded-lg hover:bg-rose-500/10 cursor-pointer"
+                        className="text-rose-700 dark:text-rose-400 hover:text-rose-950 dark:hover:text-rose-200 transition-colors p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/10 cursor-pointer"
                         title="Dismiss error"
                       >
                         <X size={14} />
                       </button>
                     </div>
-                    <p className="mt-1 text-xs text-rose-300/90">{streamError}</p>
+                    <p className="mt-1 text-xs text-rose-900 dark:text-rose-300/90 font-medium">{streamError}</p>
                     <div className="mt-2.5 flex items-center gap-3">
                       <button
                         onClick={() => handleSendMessage()}
-                        className="text-xs font-bold text-indigo-400 hover:underline cursor-pointer"
+                        className="text-xs font-bold text-indigo-700 dark:text-indigo-400 hover:underline cursor-pointer"
                       >
                         Retry generation
                       </button>
-                      <span className="text-rose-500/40 text-[10px]">•</span>
+                      <span className="text-rose-300 dark:text-rose-500/40 text-[10px]">•</span>
                       <button
                         onClick={() => setStreamError(null)}
-                        className="text-xs font-semibold text-rose-400/80 hover:text-rose-300 hover:underline cursor-pointer"
+                        className="text-xs font-semibold text-rose-800 dark:text-rose-400/80 hover:text-rose-950 hover:underline cursor-pointer"
                       >
                         Dismiss
                       </button>
@@ -3118,7 +3109,7 @@ export default function App() {
                   placeholder={isListening ? "Listening... Speak now..." : "Ask JOXIQ AI anything..."}
                   rows={1}
                   className={`flex-1 px-2 py-3 text-xs sm:text-sm min-h-[44px] bg-transparent resize-none focus:outline-none max-h-[200px] leading-snug whitespace-nowrap overflow-x-auto ${
-                    theme === "dark" ? "text-slate-100 placeholder-slate-400" : "text-black placeholder-slate-600 font-semibold"
+                    theme === "dark" ? "text-slate-100 placeholder-slate-400" : "text-slate-900 placeholder-slate-500 font-normal"
                   }`}
                 />
 
@@ -3143,7 +3134,7 @@ export default function App() {
             </div>
 
             {/* Platform powered notice */}
-            <div className="mt-1.5 text-center text-[10px] text-slate-800 dark:text-slate-400 font-extrabold select-none">
+            <div className="mt-1.5 text-center text-[10px] text-slate-500 dark:text-slate-400 font-medium select-none">
               Powered by JOXIQ AI
             </div>
           </div>

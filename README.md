@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="/logo.png" width="180" alt="JOXIQ AI Official Logo" />
-</p>
-
 <h1 align="center">JOXIQ AI</h1>
 
 <p align="center">
@@ -63,7 +59,7 @@
 │   ├── assets/               # Splash screen, adaptive icon, and launcher images
 │   ├── src/                  # Firebase modules, screen components, and static structures
 │   └── App.js                # Mobile application entry point
-├── public/                   # Static web assets (logo.png, manifest.json)
+├── public/                   # Static web assets (manifest.json)
 ├── src/                      # React web application frontend
 │   ├── components/           # Sub-modules (AboutPage, EducationalSuite, LanguageCoach, etc.)
 │   ├── lib/                  # Library bindings (Firebase initialization)

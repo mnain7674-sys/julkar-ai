@@ -15,7 +15,7 @@ html, body {
   box-sizing: border-box;
   overflow: hidden;
   background-color: #ffffff;
-  color: #000000;
+  color: #111827;
 }
 
 html.dark, html.dark body {
@@ -52,12 +52,211 @@ html.dark, html.dark body {
   background: rgba(148, 163, 184, 0.45);
 }
 
-/* Default markdown contrast */
-html:not(.dark) .markdown-body {
-  color: #0f172a;
+/* GLOBAL LIGHT THEME COLOR SYSTEM & READABILITY RULES */
+:root,
+html:not(.dark),
+[data-theme="light"] {
+  --background: #FFFFFF;
+  --foreground: #111827;
+
+  --card: #FFFFFF;
+  --card-foreground: #111827;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #111827;
+
+  --primary: #111827;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #F3F4F6;
+  --secondary-foreground: #111827;
+
+  --muted: #F3F4F6;
+  --muted-foreground: #374151;
+
+  --accent: #EFF6FF;
+  --accent-foreground: #111827;
+
+  --border: #D1D5DB;
+  --input: #D1D5DB;
+
+  --ring: #2563EB;
+
+  color-scheme: light;
 }
 
-html.dark .markdown-body {
-  color: #f1f5f9;
+html:not(.dark),
+html:not(.dark) body,
+html:not(.dark) #root,
+[data-theme="light"],
+[data-theme="light"] body {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+/* Force dark, readable text on headers, labels, paragraphs, list items in light mode */
+html:not(.dark) h1,
+html:not(.dark) h2,
+html:not(.dark) h3,
+html:not(.dark) h4,
+html:not(.dark) h5,
+html:not(.dark) h6 {
+  color: #111827 !important;
+}
+
+html:not(.dark) label {
+  color: #111827 !important;
+}
+
+/* Upgrade faint/light Tailwind text utility classes in Light Mode so no text is invisible or low-contrast */
+html:not(.dark) .text-slate-400,
+html:not(.dark) .text-gray-400,
+html:not(.dark) .text-zinc-400,
+html:not(.dark) .text-neutral-400 {
+  color: #374151 !important;
+}
+
+html:not(.dark) .text-slate-500,
+html:not(.dark) .text-gray-500,
+html:not(.dark) .text-zinc-500,
+html:not(.dark) .text-neutral-500 {
+  color: #374151 !important;
+}
+
+html:not(.dark) .text-slate-300,
+html:not(.dark) .text-slate-200,
+html:not(.dark) .text-gray-300,
+html:not(.dark) .text-gray-200,
+html:not(.dark) .text-zinc-300,
+html:not(.dark) .text-zinc-200 {
+  color: #111827 !important;
+}
+
+/* High contrast inputs and textareas in light mode */
+html:not(.dark) input,
+html:not(.dark) textarea,
+html:not(.dark) select {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+}
+
+html:not(.dark) input::placeholder,
+html:not(.dark) textarea::placeholder {
+  color: #4b5563 !important;
+  -webkit-text-fill-color: #4b5563 !important;
+}
+
+/* SUBSCRIPTION PAGE & PRICING CARDS LIGHT THEME READABILITY (#000000 PURE BLACK TEXT) */
+html:not(.dark) .subscription-card,
+html:not(.dark) .subscription-card *,
+html:not(.dark) .pro-subscription-modal,
+html:not(.dark) .pro-subscription-modal *,
+html:not(.dark) .subscription-modal-container,
+html:not(.dark) .subscription-modal-container * {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: 1 !important;
+}
+
+/* Ensure solid dark action buttons and badges in subscription modals retain crisp white text */
+html:not(.dark) .pro-subscription-modal button.bg-indigo-600,
+html:not(.dark) .pro-subscription-modal button.bg-indigo-600 *,
+html:not(.dark) .pro-subscription-modal button.bg-blue-600,
+html:not(.dark) .pro-subscription-modal button.bg-blue-600 *,
+html:not(.dark) .pro-subscription-modal button.bg-emerald-600,
+html:not(.dark) .pro-subscription-modal button.bg-emerald-600 *,
+html:not(.dark) .pro-subscription-modal button.bg-black,
+html:not(.dark) .pro-subscription-modal button.bg-black *,
+html:not(.dark) .pro-subscription-modal [class*="from-amber-600"],
+html:not(.dark) .pro-subscription-modal [class*="from-amber-600"] *,
+html:not(.dark) .pro-subscription-modal [class*="from-violet-600"],
+html:not(.dark) .pro-subscription-modal [class*="from-violet-600"] *,
+html:not(.dark) .subscription-modal-container button.bg-indigo-600,
+html:not(.dark) .subscription-modal-container button.bg-indigo-600 *,
+html:not(.dark) .subscription-modal-container button.bg-blue-600,
+html:not(.dark) .subscription-modal-container button.bg-blue-600 *,
+html:not(.dark) .subscription-modal-container button.bg-black,
+html:not(.dark) .subscription-modal-container button.bg-black * {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Ensure specific dark solid buttons and badges retain crisp white text in light mode */
+html:not(.dark) button.bg-indigo-600,
+html:not(.dark) button.bg-indigo-700,
+html:not(.dark) button.bg-emerald-600,
+html:not(.dark) button.bg-black,
+html:not(.dark) button.bg-slate-900,
+html:not(.dark) button.bg-blue-600,
+html:not(.dark) button.bg-rose-600,
+html:not(.dark) .btn-primary,
+html:not(.dark) .badge-solid {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* FORCE VISIBLE CHAT TEXT COLORS (LIGHT THEME) */
+html:not(.dark) .ai-message,
+html:not(.dark) .ai-message *,
+html:not(.dark) .assistant-message,
+html:not(.dark) .assistant-message *,
+html:not(.dark) .markdown,
+html:not(.dark) .markdown *,
+html:not(.dark) .markdown-body,
+html:not(.dark) .markdown-body *,
+html:not(.dark) .prose,
+html:not(.dark) .prose * {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html:not(.dark) .user-message,
+html:not(.dark) .user-message * {
+  color: #111827 !important;
+  -webkit-text-fill-color: #111827 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+html:not(.dark) .user-message-bubble {
+  background-color: #DBEAFE !important;
+  border-color: #BFDBFE !important;
+}
+
+/* Allow links and syntax code blocks to retain custom high-contrast colors in light mode */
+html:not(.dark) .markdown-body a,
+html:not(.dark) .markdown-body a * {
+  color: #1d4ed8 !important;
+  -webkit-text-fill-color: #1d4ed8 !important;
+}
+
+html:not(.dark) .markdown-body code:not(pre code) {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Dark mode overrides */
+html.dark .ai-message,
+html.dark .ai-message *,
+html.dark .assistant-message,
+html.dark .assistant-message *,
+html.dark .markdown,
+html.dark .markdown *,
+html.dark .markdown-body,
+html.dark .markdown-body *,
+html.dark .prose,
+html.dark .prose * {
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+
+html.dark .user-message,
+html.dark .user-message * {
+  color: #e0f2fe !important;
+  -webkit-text-fill-color: #e0f2fe !important;
 }
 
