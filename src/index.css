@@ -8,88 +8,72 @@
 }
 
 /* ==========================================================================
-   EXACT SPECIFIED THEME VARIABLES FOR LIGHT & DARK MODES
+   CSS VARIABLE THEME DEFINITIONS (LIGHT & DARK MODES)
    ========================================================================== */
 
-/* Light theme specification:
-   background = #FFFFFF
-   text/foreground = #000000
-   cards = #FFFFFF
-   card text = #000000
-   borders = #D1D5DB
-*/
 :root,
 html:not(.dark),
 [data-theme="light"] {
-  --background: #FFFFFF;
-  --foreground: #000000;
+  --background: #ffffff;
+  --foreground: #111827;
 
-  --card: #FFFFFF;
-  --card-foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #111827;
 
-  --popover: #FFFFFF;
-  --popover-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
 
-  --primary: #000000;
-  --primary-foreground: #FFFFFF;
+  --primary: #111827;
+  --primary-foreground: #ffffff;
 
-  --secondary: #F3F4F6;
-  --secondary-foreground: #000000;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
 
-  --muted: #F3F4F6;
-  --muted-foreground: #374151;
+  --muted: #f3f4f6;
+  --muted-foreground: #4b5563;
 
-  --accent: #F3F4F6;
-  --accent-foreground: #000000;
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
 
-  --border: #D1D5DB;
-  --input: #D1D5DB;
-
-  --ring: #2563EB;
+  --border: #d1d5db;
+  --input: #d1d5db;
+  --ring: #2563eb;
 
   color-scheme: light;
 }
 
-/* Dark theme specification:
-   background = #111111
-   text/foreground = #FFFFFF
-   cards = #1F1F1F
-   card text = #FFFFFF
-   borders = #374151
-*/
 html.dark,
 [data-theme="dark"] {
-  --background: #111111;
-  --foreground: #FFFFFF;
+  --background: #000000;
+  --foreground: #f8fafc;
 
-  --card: #1F1F1F;
-  --card-foreground: #FFFFFF;
+  --card: #1f1f1f;
+  --card-foreground: #ffffff;
 
-  --popover: #1F1F1F;
-  --popover-foreground: #FFFFFF;
+  --popover: #1f1f1f;
+  --popover-foreground: #ffffff;
 
-  --primary: #FFFFFF;
+  --primary: #ffffff;
   --primary-foreground: #000000;
 
-  --secondary: #2A2A2A;
-  --secondary-foreground: #FFFFFF;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
 
-  --muted: #2A2A2A;
-  --muted-foreground: #9CA3AF;
+  --muted: #2a2a2a;
+  --muted-foreground: #9ca3af;
 
-  --accent: #2A2A2A;
-  --accent-foreground: #FFFFFF;
+  --accent: #2a2a2a;
+  --accent-foreground: #ffffff;
 
   --border: #374151;
   --input: #374151;
-
-  --ring: #3B82F6;
+  --ring: #3b82f6;
 
   color-scheme: dark;
 }
 
 /* ==========================================================================
-   GLOBAL LAYOUT & BASE ENFORCEMENTS
+   BASE & LAYOUT STYLES
    ========================================================================== */
 
 html, body, #root {
@@ -101,20 +85,6 @@ html, body, #root {
   overflow: hidden;
   background-color: var(--background);
   color: var(--foreground);
-}
-
-html:not(.dark),
-html:not(.dark) body,
-html:not(.dark) #root {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-}
-
-html.dark,
-html.dark body,
-html.dark #root {
-  background-color: #111111 !important;
-  color: #FFFFFF !important;
 }
 
 *, *:before, *:after {
@@ -137,180 +107,10 @@ html.dark #root {
   background: rgba(148, 163, 184, 0.45);
 }
 
-/* ==========================================================================
-   LIGHT MODE VISIBILITY & READABILITY ENFORCEMENT
-   ========================================================================== */
-
-/* Enforce pure black (#000000) default text in light mode */
-html:not(.dark) {
-  color: #000000 !important;
+/* Fix WebKit Gradient Text Clipping across Vercel / Browsers */
+.bg-clip-text,
+[class*="bg-clip-text"] {
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
-
-/* Light Mode Input & Form elements */
-html:not(.dark) input,
-html:not(.dark) textarea,
-html:not(.dark) select {
-  color: #000000 !important;
-  background-color: #FFFFFF;
-  border-color: #D1D5DB;
-}
-
-html:not(.dark) input::placeholder,
-html:not(.dark) textarea::placeholder {
-  color: #4B5563 !important;
-}
-
-/* Prevent faint text colors in Light Mode */
-html:not(.dark) .text-slate-500,
-html:not(.dark) .text-gray-500,
-html:not(.dark) .text-zinc-500,
-html:not(.dark) .text-neutral-500 {
-  color: #374151 !important;
-}
-
-html:not(.dark) .text-slate-400,
-html:not(.dark) .text-gray-400,
-html:not(.dark) .text-zinc-400,
-html:not(.dark) .text-neutral-400 {
-  color: #4B5563 !important;
-}
-
-html:not(.dark) .text-slate-300,
-html:not(.dark) .text-slate-200,
-html:not(.dark) .text-gray-300,
-html:not(.dark) .text-gray-200,
-html:not(.dark) .text-zinc-300,
-html:not(.dark) .text-zinc-200 {
-  color: #000000 !important;
-}
-
-/* Light Theme Cards & Containers */
-html:not(.dark) .pro-subscription-modal,
-html:not(.dark) .subscription-modal-container,
-html:not(.dark) .card,
-html:not(.dark) .modal-card {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  border-color: #D1D5DB !important;
-}
-
-/* High contrast white text for solid dark buttons and badges in Light Mode */
-html:not(.dark) button.bg-black,
-html:not(.dark) button.bg-indigo-600,
-html:not(.dark) button.bg-indigo-700,
-html:not(.dark) button.bg-blue-600,
-html:not(.dark) button.bg-emerald-600,
-html:not(.dark) button.bg-purple-600,
-html:not(.dark) button.bg-rose-600,
-html:not(.dark) button.bg-slate-900,
-html:not(.dark) .btn-primary,
-html:not(.dark) .badge-solid {
-  color: #FFFFFF !important;
-}
-
-html:not(.dark) button.bg-black *,
-html:not(.dark) button.bg-indigo-600 *,
-html:not(.dark) button.bg-indigo-700 *,
-html:not(.dark) button.bg-blue-600 *,
-html:not(.dark) button.bg-emerald-600 *,
-html:not(.dark) button.bg-purple-600 *,
-html:not(.dark) button.bg-rose-600 *,
-html:not(.dark) button.bg-slate-900 *,
-html:not(.dark) .btn-primary *,
-html:not(.dark) .badge-solid * {
-  color: #FFFFFF !important;
-}
-
-/* Light Theme Chat Messages */
-html:not(.dark) .ai-message,
-html:not(.dark) .assistant-message,
-html:not(.dark) .markdown-body,
-html:not(.dark) .markdown-body p,
-html:not(.dark) .markdown-body li,
-html:not(.dark) .markdown-body h1,
-html:not(.dark) .markdown-body h2,
-html:not(.dark) .markdown-body h3 {
-  color: #000000 !important;
-}
-
-/* ==========================================================================
-   DARK MODE VISIBILITY & READABILITY ENFORCEMENT
-   ========================================================================== */
-
-/* Enforce pure white (#FFFFFF) default text in dark mode */
-html.dark {
-  color: #FFFFFF !important;
-}
-
-/* Dark Mode Card Containers (#1F1F1F) and Borders (#374151) */
-html.dark .pro-subscription-modal,
-html.dark .subscription-modal-container,
-html.dark .card,
-html.dark .modal-card {
-  background-color: #1F1F1F !important;
-  color: #FFFFFF !important;
-  border-color: #374151 !important;
-}
-
-/* Map dark card background classes to #1F1F1F */
-html.dark .bg-slate-950,
-html.dark .bg-slate-900,
-html.dark .bg-zinc-950,
-html.dark .bg-zinc-900,
-html.dark .bg-gray-950,
-html.dark .bg-gray-900 {
-  background-color: #1F1F1F;
-}
-
-/* Map dark border classes to #374151 */
-html.dark .border-slate-800,
-html.dark .border-slate-700,
-html.dark .border-zinc-800,
-html.dark .border-gray-800,
-html.dark .border-gray-700 {
-  border-color: #374151;
-}
-
-/* Dark Mode Input & Form elements */
-html.dark input,
-html.dark textarea,
-html.dark select {
-  color: #FFFFFF !important;
-  background-color: #1F1F1F !important;
-  border-color: #374151 !important;
-}
-
-html.dark input::placeholder,
-html.dark textarea::placeholder {
-  color: #9CA3AF !important;
-}
-
-/* Prevent dark text on dark backgrounds in Dark Mode */
-html.dark .text-slate-900,
-html.dark .text-slate-950,
-html.dark .text-gray-900,
-html.dark .text-zinc-900,
-html.dark .text-black {
-  color: #FFFFFF !important;
-}
-
-html.dark .text-slate-400,
-html.dark .text-gray-400,
-html.dark .text-zinc-400,
-html.dark .text-neutral-400 {
-  color: #9CA3AF !important;
-}
-
-/* Dark Theme Chat Messages */
-html.dark .ai-message,
-html.dark .assistant-message,
-html.dark .markdown-body,
-html.dark .markdown-body p,
-html.dark .markdown-body li,
-html.dark .markdown-body h1,
-html.dark .markdown-body h2,
-html.dark .markdown-body h3 {
-  color: #FFFFFF !important;
-}
-
-

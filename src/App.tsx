@@ -194,7 +194,7 @@ export default function App() {
     if (saved && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(saved)) {
       return saved as any;
     }
-    return "light";
+    return "dark";
   });
   const isDark = theme !== "light";
 
@@ -460,8 +460,8 @@ export default function App() {
     if (savedTheme && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(savedTheme)) {
       setTheme(savedTheme as any);
     } else {
-      setTheme("light");
-      localStorage.setItem("gemini_theme", "light");
+      setTheme("dark");
+      localStorage.setItem("gemini_theme", "dark");
     }
 
     if (saved) {
@@ -1770,7 +1770,7 @@ export default function App() {
   return (
     <div
       className={`relative w-full h-[100dvh] min-h-screen flex overflow-hidden font-sans transition-colors duration-300 selection:bg-indigo-500/30 ${
-        theme === "light" ? "bg-white text-black" : "bg-[#111111] text-white dark"
+        theme === "light" ? "bg-white text-black" : "bg-black text-slate-200 dark"
       }`}
       style={isKeyboardOpen && viewportHeight !== null && viewportHeight > 200 ? { height: `${viewportHeight}px` } : undefined}
     >
@@ -2791,7 +2791,7 @@ export default function App() {
 
         {/* Chat Input Bar area */}
         <footer className={`z-20 p-2 sm:p-4 md:p-6 pb-[max(12px,env(safe-area-inset-bottom))] flex flex-col items-center shrink-0 border-t fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:w-full ${
-          theme === "dark" ? "border-white/5 bg-slate-950/95 backdrop-blur-xl" : "border-slate-200 bg-white"
+          theme === "dark" ? "border-zinc-850 bg-black/98 backdrop-blur-xl" : "border-slate-200 bg-white"
         }`}>
           <div className="w-full max-w-3xl relative">
             {/* Suggested prompt chips row above input box */}
@@ -2808,7 +2808,7 @@ export default function App() {
                   disabled={isStreaming}
                   className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer shrink-0 flex items-center gap-1.5 shadow-xs active:scale-95 ${
                     theme === "dark"
-                      ? "bg-white/5 border-white/10 hover:bg-white/10 text-slate-300 hover:text-white hover:border-white/20"
+                      ? "bg-zinc-950 border-zinc-800 hover:bg-zinc-900 text-slate-300 hover:text-white hover:border-zinc-700"
                       : "bg-white border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-slate-900"
                   } ${isStreaming ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
@@ -2822,8 +2822,8 @@ export default function App() {
             <div
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              className={`backdrop-blur-3xl border rounded-2xl p-2.5 shadow-2xl flex flex-col gap-2 ring-1 ring-white/5 ${
-                theme === "dark" ? "bg-black/90 border-zinc-800 text-slate-100" : "bg-white border-slate-200/80"
+              className={`backdrop-blur-3xl border rounded-2xl p-2.5 shadow-2xl flex flex-col gap-2 ring-1 ${
+                theme === "dark" ? "bg-black border-zinc-800 text-slate-100 ring-zinc-850" : "bg-white border-slate-200/80 ring-black/5"
               }`}
             >
               {/* Image attachment preview drawer */}
@@ -2936,7 +2936,7 @@ export default function App() {
                         transition={{ duration: 0.15 }}
                         className={`absolute bottom-14 left-0 w-60 rounded-2xl border p-2.5 shadow-2xl z-50 flex flex-col gap-1 backdrop-blur-3xl text-left ${
                           theme === "dark"
-                            ? "bg-gray-950/95 border-white/10 text-slate-200"
+                            ? "bg-black border-zinc-800 text-slate-200"
                             : "bg-white border-slate-300 text-slate-900 shadow-slate-300 font-bold"
                         }`}
                       >
@@ -3077,7 +3077,7 @@ export default function App() {
                     isVoiceModalOpen
                       ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white border-indigo-400/50 shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40"
                       : (theme === "dark"
-                          ? "bg-white/5 border-white/10 text-slate-300 hover:text-indigo-400 hover:bg-white/10"
+                          ? "bg-zinc-950 border-zinc-800 text-slate-300 hover:text-white hover:bg-zinc-900"
                           : "bg-slate-100 border-slate-200 text-slate-700 hover:text-indigo-600 hover:bg-slate-200/80")
                   }`}
                   title="Open ChatGPT-style Voice Mode (Speak with AI)"
