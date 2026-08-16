@@ -1335,20 +1335,26 @@ export default function App() {
                     break;
                   }
 
+                  let parsedPayload: any = null;
                   try {
-                    const payload = JSON.parse(payloadStr);
-                    if (payload.text) {
-                      fullTargetText += payload.text;
-                    }
-                    if (payload.grounding) {
-                      finalGrounding = payload.grounding;
-                      setCurrentGrounding(payload.grounding);
-                    }
-                    if (payload.error) {
-                      throw new Error(payload.error);
-                    }
+                    parsedPayload = JSON.parse(payloadStr);
                   } catch (e: any) {
                     // Ignore JSON parse errors on partial chunk boundaries
+                  }
+
+                  if (parsedPayload) {
+                    if (parsedPayload.error) {
+                      clearInterval(typingInterval);
+                      reject(new Error(parsedPayload.error));
+                      return;
+                    }
+                    if (parsedPayload.text) {
+                      fullTargetText += parsedPayload.text;
+                    }
+                    if (parsedPayload.grounding) {
+                      finalGrounding = parsedPayload.grounding;
+                      setCurrentGrounding(parsedPayload.grounding);
+                    }
                   }
                 }
               }

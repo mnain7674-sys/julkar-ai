@@ -1059,7 +1059,7 @@ app.post("/api/chat/tts", async (req, res) => {
     let response;
     try {
       response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-tts-preview",
+        model: "gemini-2.5-flash",
         contents: [{ parts: [{ text: `Say cheerful and clear: ${text}` }] }],
         config: {
           responseModalities: ["AUDIO"],
@@ -1071,35 +1071,19 @@ app.post("/api/chat/tts", async (req, res) => {
         },
       });
     } catch (primaryError: any) {
-      console.warn("Primary TTS model gemini-3.1-flash-tts-preview failed. Trying fallback to gemini-2.5-flash...", primaryError);
-      try {
-        response = await ai.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: [{ parts: [{ text: `Say cheerful and clear: ${text}` }] }],
-          config: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: voice || "Kore" },
-              },
+      console.warn("Primary TTS model gemini-2.5-flash failed. Trying fallback to gemini-2.0-flash...", primaryError);
+      response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: [{ parts: [{ text: `Say cheerful and clear: ${text}` }] }],
+        config: {
+          responseModalities: ["AUDIO"],
+          speechConfig: {
+            voiceConfig: {
+              prebuiltVoiceConfig: { voiceName: voice || "Kore" },
             },
           },
-        });
-      } catch (secondaryError: any) {
-        console.warn("Secondary TTS model gemini-2.5-flash failed. Trying tertiary gemini-2.0-flash...", secondaryError);
-        response = await ai.models.generateContent({
-          model: "gemini-2.0-flash",
-          contents: [{ parts: [{ text: `Say cheerful and clear: ${text}` }] }],
-          config: {
-            responseModalities: ["AUDIO"],
-            speechConfig: {
-              voiceConfig: {
-                prebuiltVoiceConfig: { voiceName: voice || "Kore" },
-              },
-            },
-          },
-        });
-      }
+        },
+      });
     }
 
     const base64Audio = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
@@ -1168,7 +1152,7 @@ PEDAGOGICAL VOICE GUIDELINES:
 4. Keep the explanation punchy, accurate, and inspiring.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents: [{ parts: [{ text: systemPrompt }] }],
     });
 
@@ -1262,7 +1246,7 @@ FORMAT: Clean markdown formatting with bold points.`;
     });
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents,
     });
 
@@ -1391,7 +1375,7 @@ ${code}
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents: [
         { role: "user", parts: [{ text: `${teacherSystemPrompt}\n\n${userPrompt}` }] }
       ]
@@ -1526,7 +1510,7 @@ ${submissionCodeOrPlan || "(No draft)"}
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: `${mentorSystemPrompt}\n\n${promptContent}` }] }]
     });
 
@@ -1623,7 +1607,7 @@ Return a JSON object matching this schema EXACTLY:
 Ensure all advice is directly grounded in the student's performance data. If quiz scores are under 70%, recommend revision and extra exercises. If quiz scores are high (>85%), adjust difficulty upwards and recommend harder challenges or capstone projects!`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.6-flash",
+      model: "gemini-2.5-flash",
       contents: [{ role: "user", parts: [{ text: recommendationPrompt }] }],
       config: { responseMimeType: "application/json" }
     });
@@ -2228,7 +2212,7 @@ Respond strictly in valid JSON with these fields:
 }`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
@@ -2257,7 +2241,7 @@ Respond strictly in JSON:
 }`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
@@ -2287,7 +2271,7 @@ Respond strictly in valid JSON:
 }`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });
@@ -2312,7 +2296,7 @@ Respond strictly in JSON:
 }`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
+        model: "gemini-2.5-flash",
         contents: prompt,
         config: { responseMimeType: "application/json" }
       });

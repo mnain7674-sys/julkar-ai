@@ -131,6 +131,12 @@ export const AVAILABLE_MODELS = [
     badge: "Next-Gen",
   },
   {
+    id: "gemini-2.5-pro",
+    name: "Gemini 2.5 Pro",
+    description: "Complex reasoning and deep understanding for advanced multi-step tasks.",
+    badge: "Deep Reasoning",
+  },
+  {
     id: "gemini-1.5-flash",
     name: "Gemini 1.5 Flash",
     description: "High performance multimodal model, very efficient and widely supported.",
@@ -139,14 +145,8 @@ export const AVAILABLE_MODELS = [
   {
     id: "gemini-1.5-pro",
     name: "Gemini 1.5 Pro",
-    description: "Complex reasoning and deep understanding for advanced multi-step tasks.",
-    badge: "Deep Reasoning",
-  },
-  {
-    id: "gemini-3.5-flash",
-    name: "Gemini 3.5 Flash",
-    description: "AI Studio internal preview model. (Works on internal platforms; may not work with some external API keys).",
-    badge: "AI Studio Preview",
+    description: "Reliable pro reasoning model for long-context understanding.",
+    badge: "Classic Pro",
   },
 ];
 
