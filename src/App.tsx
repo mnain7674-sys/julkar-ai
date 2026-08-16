@@ -188,15 +188,15 @@ export default function App() {
   const [userTokensUsed, setUserTokensUsed] = useState<number>(0);
   const [showChatHistoryModal, setShowChatHistoryModal] = useState<boolean>(false);
 
-  // --- Theme Mode state ---
+  // --- Theme Mode state (Permanent Black Theme) ---
   const [theme, setTheme] = useState<"dark" | "light" | "midnight" | "emerald" | "amber" | "rose">(() => {
     const saved = localStorage.getItem("gemini_theme");
-    if (saved && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(saved)) {
+    if (saved && ["dark", "midnight", "emerald", "amber", "rose"].includes(saved)) {
       return saved as any;
     }
     return "dark";
   });
-  const isDark = theme !== "light";
+  const isDark = true;
 
   // --- Input state ---
   const [inputText, setInputText] = useState<string>("");
@@ -624,23 +624,18 @@ export default function App() {
     }
   }, [paymentToast]);
 
-  // Sync theme changes & auto-sync across users/sessions
+  // Sync theme changes & auto-sync across users/sessions (Enforce Permanent Black Theme)
   useEffect(() => {
     localStorage.setItem("gemini_theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
-    if (theme === "light") {
-      document.documentElement.classList.remove("dark");
-      document.body.classList.remove("dark");
-    } else {
-      document.documentElement.classList.add("dark");
-      document.body.classList.add("dark");
-    }
+    document.documentElement.classList.add("dark");
+    document.body.classList.add("dark");
   }, [theme]);
 
   useEffect(() => {
     const handleStorage = (e: StorageEvent) => {
       if (e.key === "gemini_theme" && e.newValue) {
-        if (["dark", "light", "midnight", "emerald", "amber", "rose"].includes(e.newValue)) {
+        if (["dark", "midnight", "emerald", "amber", "rose"].includes(e.newValue)) {
           setTheme(e.newValue as any);
         }
       }
@@ -648,7 +643,7 @@ export default function App() {
     window.addEventListener("storage", handleStorage);
     const interval = setInterval(() => {
       const stored = localStorage.getItem("gemini_theme");
-      if (stored && stored !== theme && ["dark", "light", "midnight", "emerald", "amber", "rose"].includes(stored)) {
+      if (stored && stored !== theme && ["dark", "midnight", "emerald", "amber", "rose"].includes(stored)) {
         setTheme(stored as any);
       }
     }, 1000);
@@ -1775,9 +1770,7 @@ export default function App() {
 
   return (
     <div
-      className={`relative w-full h-[100dvh] min-h-screen flex overflow-hidden font-sans transition-colors duration-300 selection:bg-indigo-500/30 ${
-        theme === "light" ? "bg-white text-black" : "bg-black text-slate-200 dark"
-      }`}
+      className="relative w-full h-[100dvh] min-h-screen flex overflow-hidden font-sans transition-colors duration-300 selection:bg-indigo-500/30 bg-black text-slate-200 dark"
       style={isKeyboardOpen && viewportHeight !== null && viewportHeight > 200 ? { height: `${viewportHeight}px` } : undefined}
     >
       {/* Full-screen Launch Splash Screen */}
@@ -2243,16 +2236,12 @@ export default function App() {
         )}
 
           {/* Top Navbar */}
-        <header className={`h-11 sm:h-16 flex items-center justify-between px-2 sm:px-4 md:px-8 border-b shrink-0 z-10 ${
-          theme === "dark" ? "bg-black/90 border-zinc-800 text-slate-100" : "bg-white border-slate-300 text-slate-900"
-        } backdrop-blur-md`}>
+        <header className="h-11 sm:h-16 flex items-center justify-between px-2 sm:px-4 md:px-8 border-b shrink-0 z-10 bg-black/95 border-zinc-850 text-slate-100 backdrop-blur-md">
           <div className="flex items-center gap-1.5 sm:gap-3">
             <button
               id="btn-sidebar-toggle"
               onClick={() => setSidebarOpen(prev => !prev)}
-              className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all cursor-pointer ${
-                theme === "dark" ? "bg-white/5 border-white/10 text-slate-200 hover:bg-white/10" : "bg-white border-slate-200 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-              }`}
+              className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-all cursor-pointer bg-white/5 border-white/10 text-slate-200 hover:bg-white/10"
               title="Toggle Sidebar Menu"
             >
               <Menu size={16} className="sm:w-[18px] sm:h-[18px]" />
@@ -2287,25 +2276,21 @@ export default function App() {
           </div>
         ) : activeView === "education" ? (
           <div className="flex-1 overflow-y-auto">
-            <EducationalSuite theme={theme === "light" ? "light" : "dark"} userProfile={userProfile} />
+            <EducationalSuite theme="dark" userProfile={userProfile} />
           </div>
         ) : (
           <>
             {/* Message container */}
-            <div className={`flex-1 min-h-0 overflow-y-auto px-2 sm:px-4 md:px-24 py-2 sm:py-4 md:py-6 pb-24 sm:pb-28 md:pb-6 space-y-4 md:space-y-6 overflow-x-hidden ${
-              isDark ? "bg-black" : "bg-white"
-            }`}>
+            <div className="flex-1 min-h-0 overflow-y-auto px-2 sm:px-4 md:px-24 py-2 sm:py-4 md:py-6 pb-24 sm:pb-28 md:pb-6 space-y-4 md:space-y-6 overflow-x-hidden bg-black text-slate-100">
               {!activeConversation || activeConversation.messages.length === 0 ? (
                 /* Starter welcome dashboard */
                 <div className="max-w-3xl mx-auto w-full flex flex-col items-center justify-center py-4 sm:py-8 px-4 space-y-3">
                   <div className="text-center space-y-2">
 
-                    <h1 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mt-3 ${
-                      isDark ? "text-white" : "text-slate-900"
-                    }`}>
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight mt-3 text-white">
                       How can I support you today?
                     </h1>
-                    <p className="text-slate-900 font-semibold dark:text-slate-300 max-w-md mx-auto text-xs sm:text-sm leading-relaxed px-4">
+                    <p className="text-slate-400 font-medium max-w-md mx-auto text-xs sm:text-sm leading-relaxed px-4">
                       Start a conversation below, choose a chat mode, upload a document or code file, or use real-time search grounding.
                     </p>
                   </div>
@@ -2317,10 +2302,10 @@ export default function App() {
                       className={`p-3.5 border rounded-xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all duration-200 active:scale-95 ${
                         selectedPersonaId === "general"
                           ? "bg-indigo-600 text-white border-indigo-500 shadow-md font-bold"
-                          : (isDark ? "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]" : "bg-white border-slate-300 text-slate-900 font-extrabold hover:bg-slate-100 shadow-xs")
+                          : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]"
                       }`}
                     >
-                      <Sparkles size={18} className="text-indigo-600 dark:text-indigo-400" />
+                      <Sparkles size={18} className="text-indigo-400" />
                       <span className="text-xs font-bold font-sans">JOXIQ AI</span>
                     </button>
 
@@ -2329,10 +2314,10 @@ export default function App() {
                       className={`p-3.5 border rounded-xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all duration-200 active:scale-95 ${
                         selectedPersonaId === "socratic"
                           ? "bg-indigo-600 text-white border-indigo-500 shadow-md font-bold"
-                          : (isDark ? "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]" : "bg-white border-slate-300 text-slate-900 font-extrabold hover:bg-slate-100 shadow-xs")
+                          : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]"
                       }`}
                     >
-                      <GraduationCap size={18} className="text-emerald-600 dark:text-emerald-400" />
+                      <GraduationCap size={18} className="text-emerald-400" />
                       <span className="text-xs font-bold font-sans">Study Mode</span>
                     </button>
 
@@ -2341,10 +2326,10 @@ export default function App() {
                       className={`p-3.5 border rounded-xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all duration-200 active:scale-95 ${
                         selectedPersonaId === "coder"
                           ? "bg-indigo-600 text-white border-indigo-500 shadow-md font-bold"
-                          : (isDark ? "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]" : "bg-white border-slate-300 text-slate-900 font-extrabold hover:bg-slate-100 shadow-xs")
+                          : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]"
                       }`}
                     >
-                      <Code size={18} className="text-amber-600 dark:text-amber-400" />
+                      <Code size={18} className="text-amber-400" />
                       <span className="text-xs font-bold font-sans">Coding Mode</span>
                     </button>
 
@@ -2353,7 +2338,7 @@ export default function App() {
                       className={`p-3.5 border rounded-xl flex flex-col items-center justify-center text-center gap-2 cursor-pointer transition-all duration-200 active:scale-95 ${
                         selectedPersonaId === "translator"
                           ? "bg-indigo-600 text-white border-indigo-500 shadow-md font-bold"
-                          : (isDark ? "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]" : "bg-white border-slate-300 text-slate-900 font-extrabold hover:bg-slate-100 shadow-xs")
+                          : "bg-white/[0.03] border-white/10 text-slate-300 hover:bg-white/[0.08]"
                       }`}
                     >
                       <Languages size={18} className="text-pink-600 dark:text-pink-400" />
@@ -2796,9 +2781,7 @@ export default function App() {
         </div>
 
         {/* Chat Input Bar area */}
-        <footer className={`z-20 p-2 sm:p-4 md:p-6 pb-[max(12px,env(safe-area-inset-bottom))] flex flex-col items-center shrink-0 border-t fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:w-full ${
-          theme === "dark" ? "border-zinc-850 bg-black/98 backdrop-blur-xl" : "border-slate-200 bg-white"
-        }`}>
+        <footer className="z-20 p-2 sm:p-4 md:p-6 pb-[max(12px,env(safe-area-inset-bottom))] flex flex-col items-center shrink-0 border-t fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:w-full border-zinc-850 bg-black/98 backdrop-blur-xl">
           <div className="w-full max-w-3xl relative">
             {/* Suggested prompt chips row above input box */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none no-scrollbar w-full select-none">
@@ -2812,11 +2795,9 @@ export default function App() {
                   key={idx}
                   onClick={() => handleSendMessage(item.prompt)}
                   disabled={isStreaming}
-                  className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer shrink-0 flex items-center gap-1.5 shadow-xs active:scale-95 ${
-                    theme === "dark"
-                      ? "bg-zinc-950 border-zinc-800 hover:bg-zinc-900 text-slate-300 hover:text-white hover:border-zinc-700"
-                      : "bg-white border-slate-200 hover:bg-slate-50 text-slate-700 hover:text-slate-900"
-                  } ${isStreaming ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all duration-200 border cursor-pointer shrink-0 flex items-center gap-1.5 shadow-xs active:scale-95 bg-zinc-950 border-zinc-800 hover:bg-zinc-900 text-slate-300 hover:text-white hover:border-zinc-700 ${
+                    isStreaming ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                 >
                   <item.icon size={12} className="text-indigo-400 shrink-0" />
                   <span>{item.label}</span>
@@ -2828,15 +2809,11 @@ export default function App() {
             <div
               onDragOver={handleDragOver}
               onDrop={handleDrop}
-              className={`backdrop-blur-3xl border rounded-2xl p-2.5 shadow-2xl flex flex-col gap-2 ring-1 ${
-                theme === "dark" ? "bg-black border-zinc-800 text-slate-100 ring-zinc-850" : "bg-white border-slate-200/80 ring-black/5"
-              }`}
+              className="backdrop-blur-3xl border rounded-2xl p-2.5 shadow-2xl flex flex-col gap-2 ring-1 bg-black border-zinc-800 text-slate-100 ring-zinc-850"
             >
               {/* Image attachment preview drawer */}
               {attachedImage && (
-                <div className={`flex items-center gap-3 p-2 rounded-xl border max-w-sm ml-2 mt-1 ${
-                  theme === "dark" ? "bg-white/5 border-white/10 text-white" : "bg-slate-100 border-slate-300 text-slate-900 font-bold"
-                }`}>
+                <div className="flex items-center gap-3 p-2 rounded-xl border max-w-sm ml-2 mt-1 bg-white/5 border-white/10 text-white">
                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-black/40 border border-white/10 relative group shrink-0">
                     <img
                       src={attachedImage.data}
@@ -2861,19 +2838,17 @@ export default function App() {
 
               {/* Document parsed attachment preview drawer */}
               {attachedDocument && (
-                <div className={`flex items-center gap-3 p-2 rounded-xl border max-w-sm ml-2 mt-1 ${
-                  theme === "dark" ? "bg-white/5 border-white/10 text-white" : "bg-slate-100 border-slate-300 text-slate-900 font-bold"
-                }`}>
-                  <div className="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/15">
+                <div className="flex items-center gap-3 p-2 rounded-xl border max-w-sm ml-2 mt-1 bg-white/5 border-white/10 text-white">
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/15">
                     <FileText size={18} />
                   </div>
                   <div className="flex-1 min-w-0 text-left">
-                    <div className="text-xs font-bold truncate text-slate-900 dark:text-white">{attachedDocument.name}</div>
-                    <div className="text-[10px] text-slate-700 dark:text-slate-300 font-mono truncate font-bold">{attachedDocument.size} &bull; Parsed Text</div>
+                    <div className="text-xs font-bold truncate text-white">{attachedDocument.name}</div>
+                    <div className="text-[10px] text-slate-300 font-mono truncate font-bold">{attachedDocument.size} &bull; Parsed Text</div>
                   </div>
                   <button
                     onClick={() => setAttachedDocument(null)}
-                    className="p-1.5 rounded-lg text-slate-700 dark:text-slate-300 hover:text-rose-600 hover:bg-rose-500/10 cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-300 hover:text-rose-400 hover:bg-rose-500/10 cursor-pointer"
                     title="Remove document text"
                   >
                     <X size={14} />
@@ -2919,14 +2894,14 @@ export default function App() {
                   <button
                     type="button"
                     onClick={() => setPlusMenuOpen(!plusMenuOpen)}
-                    className={`p-3 rounded-xl transition-all hover:bg-black/10 dark:hover:bg-white/10 text-slate-800 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 cursor-pointer relative z-50 flex items-center justify-center ${
-                      plusMenuOpen ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rotate-45" : ""
+                    className={`p-3 rounded-xl transition-all hover:bg-white/10 text-slate-300 hover:text-indigo-400 cursor-pointer relative z-50 flex items-center justify-center ${
+                      plusMenuOpen ? "bg-indigo-500/10 text-indigo-400 rotate-45" : ""
                     }`}
                     title="Add attachment or take photo"
                     disabled={isUploading}
                   >
                     {isUploading ? (
-                      <Loader2 className="w-5 h-5 text-indigo-600 animate-spin" />
+                      <Loader2 className="w-5 h-5 text-indigo-400 animate-spin" />
                     ) : (
                       <Plus className="w-5 h-5 transition-transform duration-250" />
                     )}
@@ -2940,13 +2915,9 @@ export default function App() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 15, scale: 0.95 }}
                         transition={{ duration: 0.15 }}
-                        className={`absolute bottom-14 left-0 w-60 rounded-2xl border p-2.5 shadow-2xl z-50 flex flex-col gap-1 backdrop-blur-3xl text-left ${
-                          theme === "dark"
-                            ? "bg-black border-zinc-800 text-slate-200"
-                            : "bg-white border-slate-300 text-slate-900 shadow-slate-300 font-bold"
-                        }`}
+                        className="absolute bottom-14 left-0 w-60 rounded-2xl border p-2.5 shadow-2xl z-50 flex flex-col gap-1 backdrop-blur-3xl text-left bg-black border-zinc-800 text-slate-200"
                       >
-                        <div className="px-2 py-1 text-[10px] uppercase tracking-wider text-slate-900 dark:text-slate-400 font-extrabold border-b border-slate-300 dark:border-slate-500/10 mb-1">
+                        <div className="px-2 py-1 text-[10px] uppercase tracking-wider text-slate-400 font-extrabold border-b border-slate-500/10 mb-1">
                           Attachments
                         </div>
 
@@ -2957,16 +2928,14 @@ export default function App() {
                             setCameraModalOpen(true);
                             setPlusMenuOpen(false);
                           }}
-                          className={`w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer ${
-                            theme === "dark" ? "hover:bg-white/5" : "hover:bg-slate-100 text-slate-900"
-                          }`}
+                          className="w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer hover:bg-white/5"
                         >
-                          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                          <div className="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400">
                             <Camera className="w-4 h-4" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-extrabold text-slate-900 dark:text-white">Live Webcam</div>
-                            <div className="text-[10px] text-slate-700 dark:text-slate-300 font-bold">Capture photo with webcam</div>
+                            <div className="font-extrabold text-white">Live Webcam</div>
+                            <div className="text-[10px] text-slate-300 font-bold">Capture photo with webcam</div>
                           </div>
                         </button>
 
@@ -2977,16 +2946,14 @@ export default function App() {
                             mobileCameraInputRef.current?.click();
                             setPlusMenuOpen(false);
                           }}
-                          className={`w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer ${
-                            theme === "dark" ? "hover:bg-white/5" : "hover:bg-slate-100 text-slate-900"
-                          }`}
+                          className="w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer hover:bg-white/5"
                         >
-                          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
                             <Smartphone className="w-4 h-4" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-extrabold text-slate-900 dark:text-white">Phone Camera</div>
-                            <div className="text-[10px] text-slate-700 dark:text-slate-300 font-bold">Capture photo directly using your phone</div>
+                            <div className="font-extrabold text-white">Phone Camera</div>
+                            <div className="text-[10px] text-slate-300 font-bold">Capture photo directly using your phone</div>
                           </div>
                         </button>
 
@@ -2997,16 +2964,14 @@ export default function App() {
                             fileInputRef.current?.click();
                             setPlusMenuOpen(false);
                           }}
-                          className={`w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer ${
-                            theme === "dark" ? "hover:bg-white/5" : "hover:bg-slate-100 text-slate-900"
-                          }`}
+                          className="w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer hover:bg-white/5"
                         >
-                          <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400">
+                          <div className="p-1.5 rounded-lg bg-sky-500/10 text-sky-400">
                             <ImageIcon className="w-4 h-4" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-extrabold text-slate-900 dark:text-white">Gallery Upload</div>
-                            <div className="text-[10px] text-slate-700 dark:text-slate-300 font-bold">Choose an image from your gallery</div>
+                            <div className="font-extrabold text-white">Gallery Upload</div>
+                            <div className="text-[10px] text-slate-300 font-bold">Choose an image from your gallery</div>
                           </div>
                         </button>
 
@@ -3017,16 +2982,14 @@ export default function App() {
                             docInputRef.current?.click();
                             setPlusMenuOpen(false);
                           }}
-                          className={`w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer ${
-                            theme === "dark" ? "hover:bg-white/5" : "hover:bg-slate-100 text-slate-900"
-                          }`}
+                          className="w-full flex items-center gap-3 p-2 rounded-xl text-xs font-bold transition-colors text-left cursor-pointer hover:bg-white/5"
                         >
-                          <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                          <div className="p-1.5 rounded-lg bg-amber-500/10 text-amber-400">
                             <FileText className="w-4 h-4" />
                           </div>
                           <div className="flex-1">
-                            <div className="font-extrabold text-slate-900 dark:text-white">Upload Document</div>
-                            <div className="text-[10px] text-slate-700 dark:text-slate-300 font-bold">Upload PDF, text, code or other files</div>
+                            <div className="font-extrabold text-white">Upload Document</div>
+                            <div className="text-[10px] text-slate-300 font-bold">Upload PDF, text, code or other files</div>
                           </div>
                         </button>
                       </motion.div>
@@ -3065,7 +3028,7 @@ export default function App() {
                   className={`p-3 rounded-xl transition-all cursor-pointer relative shrink-0 ${
                     isListening
                       ? "bg-rose-500/10 text-rose-500 ring-2 ring-rose-500/20 animate-pulse"
-                      : "text-slate-400 hover:text-indigo-500 hover:bg-black/5 dark:hover:bg-white/10"
+                      : "text-slate-400 hover:text-indigo-400 hover:bg-white/10"
                   }`}
                   title={isListening ? "Stop listening to speech" : "Speak instead of typing"}
                 >
@@ -3082,9 +3045,7 @@ export default function App() {
                   className={`p-2.5 sm:p-3 rounded-xl transition-all cursor-pointer relative shrink-0 flex items-center gap-1.5 text-xs font-bold border ${
                     isVoiceModalOpen
                       ? "bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-500 text-white border-indigo-400/50 shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400/40"
-                      : (theme === "dark"
-                          ? "bg-zinc-950 border-zinc-800 text-slate-300 hover:text-white hover:bg-zinc-900"
-                          : "bg-slate-100 border-slate-200 text-slate-700 hover:text-indigo-600 hover:bg-slate-200/80")
+                      : "bg-zinc-950 border-zinc-800 text-slate-300 hover:text-white hover:bg-zinc-900"
                   }`}
                   title="Open ChatGPT-style Voice Mode (Speak with AI)"
                 >
@@ -3115,9 +3076,7 @@ export default function App() {
                   }}
                   placeholder={isListening ? "Listening... Speak now..." : "Ask JOXIQ AI anything..."}
                   rows={1}
-                  className={`flex-1 px-2 py-3 text-xs sm:text-sm min-h-[44px] bg-transparent resize-none focus:outline-none max-h-[200px] leading-snug whitespace-nowrap overflow-x-auto ${
-                    theme === "dark" ? "text-slate-100 placeholder-slate-400" : "text-slate-900 placeholder-slate-500 font-normal"
-                  }`}
+                  className="flex-1 px-2 py-3 text-xs sm:text-sm min-h-[44px] bg-transparent resize-none focus:outline-none max-h-[200px] leading-snug whitespace-nowrap overflow-x-auto text-slate-100 placeholder-slate-400"
                 />
 
                 {/* Submit trigger button */}
@@ -3126,7 +3085,7 @@ export default function App() {
                   disabled={isStreaming || (!inputText.trim() && !attachedImage && !attachedDocument)}
                   className={`p-3 rounded-xl transition-all shadow-lg text-white mb-1 shrink-0 cursor-pointer ${
                     isStreaming || (!inputText.trim() && !attachedImage && !attachedDocument)
-                      ? "bg-slate-200 dark:bg-white/5 text-slate-500 dark:text-slate-600 cursor-not-allowed shadow-none"
+                      ? "bg-white/5 text-slate-600 cursor-not-allowed shadow-none"
                       : "bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-500 hover:to-purple-500 shadow-indigo-600/40 hover:scale-105 active:scale-95"
                   }`}
                   title={inputText.trim() || attachedImage || attachedDocument ? "Send message" : "Type a message..."}
