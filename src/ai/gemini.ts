@@ -29,9 +29,10 @@ export class GeminiProvider implements IAIProvider {
   private getClient(): GoogleGenAI {
     if (!this.client) {
       const apiKey = envConfig.geminiApiKey;
-      if (!apiKey) {
+      if (!apiKey || apiKey === "MY_GEMINI_API_KEY" || apiKey.trim() === "") {
+        console.error("[GeminiProvider] Missing GEMINI_API_KEY in environment variables!");
         throw new Error(
-          "Gemini API key is not configured. Please set GEMINI_API_KEY in environment variables or Secrets."
+          "GEMINI_API_KEY is not configured in Vercel environment variables. Please go to your Vercel Project Settings > Environment Variables, add GEMINI_API_KEY with your Google Gemini API key, and redeploy."
         );
       }
       this.client = new GoogleGenAI({

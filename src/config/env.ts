@@ -43,7 +43,14 @@ export const envConfig = {
     return (
       getEnvVar("GEMINI_API_KEY") ||
       getEnvVar("GOOGLE_API_KEY") ||
-      getEnvVar("gemini_api_key")
+      getEnvVar("GOOGLE_GENAI_API_KEY") ||
+      getEnvVar("GOOGLE_AI_API_KEY") ||
+      getEnvVar("gemini_api_key") ||
+      getEnvVar("google_api_key") ||
+      getEnvVar("Gemini_API_Key") ||
+      getEnvVar("Gemini_Api_Key") ||
+      getEnvVar("VITE_GEMINI_API_KEY") ||
+      getEnvVar("VITE_GOOGLE_API_KEY")
     );
   },
 

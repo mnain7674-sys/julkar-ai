@@ -1,6 +1,8 @@
-// @ts-ignore
-import server from "../dist/server.cjs";
+import app from "../server.js";
 
-const app = (server as any)?.default || server;
+export const config = {
+  maxDuration: 60,
+};
 
 export default app;
+

@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path from "path";
 import fs from "fs";
 import os from "os";
@@ -37,6 +38,9 @@ function getStripeInstance(): Stripe | null {
 
 const app = express();
 const PORT = 3000;
+
+// Enable CORS across all routes
+app.use(cors());
 
 // Persistent Admin Settings file
 const SETTINGS_FILE = path.join(process.cwd(), "admin_settings.json");
@@ -117,8 +121,10 @@ function getGeminiClient(): GoogleGenAI {
   if (!aiClient) {
     const apiKey = 
       process.env.GEMINI_API_KEY || 
-      process.env.gemini_api_key || 
       process.env.GOOGLE_API_KEY || 
+      process.env.GOOGLE_GENAI_API_KEY || 
+      process.env.GOOGLE_AI_API_KEY || 
+      process.env.gemini_api_key || 
       process.env.google_api_key || 
       process.env.VITE_GEMINI_API_KEY || 
       process.env.VITE_GOOGLE_API_KEY || 
@@ -127,7 +133,8 @@ function getGeminiClient(): GoogleGenAI {
       process.env.gemini_API_key;
       
     if (!apiKey || apiKey === "MY_GEMINI_API_KEY" || apiKey.trim() === "") {
-      throw new Error("GEMINI_API_KEY is missing or not configured. Please open AI Studio Settings / Secrets and configure your GEMINI_API_KEY.");
+      console.error("[getGeminiClient] GEMINI_API_KEY is not configured!");
+      throw new Error("GEMINI_API_KEY is missing or not configured. Please open Vercel Project Settings > Environment Variables and configure GEMINI_API_KEY.");
     }
     
     aiClient = new GoogleGenAI({
@@ -145,7 +152,7 @@ function getGeminiClient(): GoogleGenAI {
 /**
  * Health check endpoint
  */
-app.get("/api/health", (req, res) => {
+app.get(["/api/health", "/health"], (req, res) => {
   res.json({ status: "ok", time: new Date().toISOString() });
 });
 
@@ -959,7 +966,7 @@ app.post(["/session/:sessionId/clear", "/api/session/:sessionId/clear"], async (
  * Chat Stream API Endpoint (Server-Sent Events)
  * Streams responses dynamically routed to Gemini, OpenAI, or Claude via AI Router
  */
-app.post("/api/chat/stream", async (req, res) => {
+app.post(["/api/chat/stream", "/chat/stream"], async (req, res) => {
   try {
     const { messages, model, systemInstruction, temperature, useSearch, userTier, userId, userEmail } = req.body;
 
@@ -980,11 +987,14 @@ app.post("/api/chat/stream", async (req, res) => {
     const extraInstruction = userId ? await personalizationEngine.buildPersonalizedInstruction(userId) : "";
     const effectiveSystemInstruction = (systemInstruction || "") + extraInstruction;
 
-    // Set SSE Headers
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
+    // Set SSE Headers compatible with Vercel Serverless Functions and reverse proxies
+    res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+    res.setHeader("Cache-Control", "no-cache, no-transform");
     res.setHeader("Connection", "keep-alive");
-    res.flushHeaders();
+    res.setHeader("X-Accel-Buffering", "no");
+    if (typeof res.flushHeaders === "function") {
+      res.flushHeaders();
+    }
 
     const stream = chatService.streamChat(messages, {
       model,
@@ -1026,18 +1036,36 @@ app.post("/api/chat/stream", async (req, res) => {
         dataPayload.providerUsed
       ) {
         res.write(`data: ${JSON.stringify(dataPayload)}\n\n`);
+        if (typeof (res as any).flush === "function") {
+          (res as any).flush();
+        }
       }
     }
 
     res.write("data: [DONE]\n\n");
+    if (typeof (res as any).flush === "function") {
+      (res as any).flush();
+    }
     res.end();
   } catch (error: any) {
-    console.error("Chat streaming error:", error);
+    console.error("[Backend /api/chat/stream Error]:", error);
+    const rawError = error?.message || String(error || "");
+    let userFriendlyError = rawError;
+
+    if (rawError.includes("GEMINI_API_KEY") || rawError.includes("API key is not configured")) {
+      userFriendlyError = "GEMINI_API_KEY is not configured in Vercel environment variables. Please go to Vercel Project Settings > Environment Variables, add GEMINI_API_KEY, and redeploy.";
+    } else if (rawError.includes("429") || rawError.includes("RESOURCE_EXHAUSTED") || rawError.includes("Quota exceeded")) {
+      userFriendlyError = "Gemini API rate limit exceeded (429). The free tier request quota was temporarily reached. Please wait a few moments and try again.";
+    }
+
     if (res.headersSent) {
-      res.write(`data: ${JSON.stringify({ error: error.message || "Internal Server Error" })}\n\n`);
+      res.write(`data: ${JSON.stringify({ error: userFriendlyError })}\n\n`);
+      if (typeof (res as any).flush === "function") {
+        (res as any).flush();
+      }
       res.end();
     } else {
-      res.status(500).json({ error: error.message || "An error occurred during text generation." });
+      res.status(500).json({ error: userFriendlyError });
     }
   }
 });
@@ -2385,6 +2413,13 @@ function getFallbackStudyAssistantData(action: string, courseName?: string, clas
     };
   }
 }
+
+/**
+ * User token recording endpoint
+ */
+app.post(["/api/user/record-tokens", "/user/record-tokens"], (req, res) => {
+  res.json({ success: true });
+});
 
 /**
  * Start the Express + Vite server
