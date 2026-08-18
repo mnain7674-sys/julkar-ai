@@ -1,16 +1,28 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, setPersistence, browserLocalPersistence, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
-import firebaseAppletConfig from "../../firebase-applet-config.json";
 
-const firebaseConfig = firebaseAppletConfig || {
-  apiKey: "AIzaSyD6JiZYZQE3tP3Opskq5Gshg34B-UAPbiA",
-  authDomain: "joxiq-ai.firebaseapp.com",
-  projectId: "joxiq-ai",
-  storageBucket: "joxiq-ai.firebasestorage.app",
-  messagingSenderId: "698536954361",
-  appId: "1:698536954361:web:c7f2c1bcdb01f5cee5d528",
-  measurementId: "G-NRTW7JK3XB"
+export const firebaseAppletConfig = {
+  projectId: "inductive-helix-ljkjx",
+  appId: "1:1013599359207:web:17ea0acc84e4ff63221242",
+  apiKey: "AIzaSyBWypD0kfRm25objLD9FIz40zf2tqUvlIc",
+  authDomain: "inductive-helix-ljkjx.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-geminichatbot-bf6eb762-2279-442d-b4f7-500480e6b0b7",
+  storageBucket: "inductive-helix-ljkjx.firebasestorage.app",
+  messagingSenderId: "1013599359207",
+  measurementId: "",
+  oAuthClientId: "1013599359207-j08f4027qfd1u9k29kqtkkp4b64k2o7l.apps.googleusercontent.com",
+  recaptchaSiteKey: ""
+};
+
+const firebaseConfig = {
+  apiKey: firebaseAppletConfig.apiKey,
+  authDomain: firebaseAppletConfig.authDomain,
+  projectId: firebaseAppletConfig.projectId,
+  storageBucket: firebaseAppletConfig.storageBucket,
+  messagingSenderId: firebaseAppletConfig.messagingSenderId,
+  appId: firebaseAppletConfig.appId,
+  measurementId: firebaseAppletConfig.measurementId
 };
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
