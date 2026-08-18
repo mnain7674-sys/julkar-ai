@@ -1325,8 +1325,19 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const errJson = await response.json().catch(() => ({}));
-        throw new Error(errJson.error || "An error occurred with the backend server.");
+        let errorMsg = `Server error (${response.status})`;
+        try {
+          const rawText = await response.text();
+          try {
+            const parsed = JSON.parse(rawText);
+            errorMsg = parsed.error || parsed.message || errorMsg;
+          } catch {
+            if (rawText && rawText.length < 300) {
+              errorMsg = rawText;
+            }
+          }
+        } catch {}
+        throw new Error(errorMsg);
       }
 
       const reader = response.body?.getReader();
@@ -1693,7 +1704,19 @@ export default function App() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to stream response");
+        let errorMsg = `Server error (${response.status})`;
+        try {
+          const rawText = await response.text();
+          try {
+            const parsed = JSON.parse(rawText);
+            errorMsg = parsed.error || parsed.message || errorMsg;
+          } catch {
+            if (rawText && rawText.length < 300) {
+              errorMsg = rawText;
+            }
+          }
+        } catch {}
+        throw new Error(errorMsg);
       }
 
       const reader = response.body?.getReader();

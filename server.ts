@@ -42,6 +42,23 @@ const PORT = 3000;
 // Enable CORS across all routes
 app.use(cors());
 
+// Vercel Serverless Path Normalizer & Logger
+app.use((req, res, next) => {
+  const original = req.originalUrl || req.url || "";
+  const matchedPath = (req.headers["x-matched-path"] as string) || "";
+  
+  if (req.url.startsWith("/api/index") && original && !original.startsWith("/api/index")) {
+    req.url = original;
+  } else if (req.url.startsWith("/api/index") && matchedPath) {
+    req.url = matchedPath;
+  }
+  
+  if (req.method !== "OPTIONS") {
+    console.info(`[Backend ${req.method}] ${req.url} (original: ${original})`);
+  }
+  next();
+});
+
 // Persistent Admin Settings file
 const SETTINGS_FILE = path.join(process.cwd(), "admin_settings.json");
 
