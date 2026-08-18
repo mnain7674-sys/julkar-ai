@@ -140,8 +140,46 @@ export default function App() {
   const [activeView, setActiveView] = useState<"chat" | "education" | "admin">("chat");
 
   // --- Conversations and active state ---
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [activeId, setActiveId] = useState<string>("");
+  const [conversations, setConversations] = useState<Conversation[]>(() => {
+    try {
+      const saved = localStorage.getItem("gemini_conversations");
+      if (saved) {
+        const parsed: Conversation[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("Initial load error", e);
+    }
+    const defaultPersona = SYSTEM_PERSONAS[0];
+    return [
+      {
+        id: "chat-" + Math.random().toString(36).substring(2, 9),
+        title: "New Chat",
+        messages: [],
+        model: "gemini-2.5-flash",
+        systemInstruction: defaultPersona.systemInstruction,
+        temperature: 0.7,
+        useSearch: true,
+        timestamp: Date.now(),
+      },
+    ];
+  });
+  const [activeId, setActiveId] = useState<string>(() => {
+    try {
+      const active = localStorage.getItem("gemini_active_conv_id");
+      if (active) return active;
+      const saved = localStorage.getItem("gemini_conversations");
+      if (saved) {
+        const parsed: Conversation[] = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed[0].id;
+        }
+      }
+    } catch {}
+    return "";
+  });
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => typeof window !== "undefined" && window.innerWidth >= 1024);
 
   const handleSidebarItemClick = (action: () => void) => {
@@ -770,7 +808,16 @@ export default function App() {
   // Get active conversation object
   const activeConversation = conversations.find(
     (c) => c.id === activeId
-  );
+  ) || conversations[0] || {
+    id: "chat-default",
+    title: "New Chat",
+    messages: [],
+    model: "gemini-2.5-flash",
+    systemInstruction: "",
+    temperature: 0.7,
+    useSearch: true,
+    timestamp: Date.now(),
+  };
 
   // Initialize a fresh new conversation
   const createNewChat = (initialPrompt?: string) => {

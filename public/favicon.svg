@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="joxiqGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#7c3aed" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <rect width="100" height="100" rx="24" fill="#09090b" />
+  <rect x="2" y="2" width="96" height="96" rx="22" stroke="url(#joxiqGrad)" stroke-width="3" stroke-opacity="0.6" />
+  <path d="M32 30 H68 C70 30 72 32 72 34 V42 C72 44 70 46 68 46 H54 V64 C54 69 50 72 44 72 H36 C34 72 32 70 32 68 V62 C32 60 34 58 36 58 H42 V46 H32 C30 46 28 44 28 42 V34 C28 32 30 30 32 30 Z" fill="url(#joxiqGrad)" />
+  <circle cx="68" cy="62" r="5" fill="#38bdf8" />
+</svg>
