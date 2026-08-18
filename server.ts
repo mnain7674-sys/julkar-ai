@@ -2106,11 +2106,11 @@ app.post("/api/user/theme", (req, res) => {
   }
 });
 
-app.get("/api/admin/web-search", (req, res) => {
+app.get(["/api/admin/web-search", "/admin/web-search"], (req, res) => {
   res.json({ useSearch: adminGlobalSearch });
 });
 
-app.post("/api/admin/web-search", (req, res) => {
+app.post(["/api/admin/web-search", "/admin/web-search"], (req, res) => {
   try {
     const { useSearch } = req.body;
     adminGlobalSearch = Boolean(useSearch);
