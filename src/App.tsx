@@ -552,6 +552,7 @@ export default function App() {
         const displayName = firebaseUser.displayName || email.split("@")[0] || "User";
         const profile = { name: displayName, email };
         setUserProfile(profile);
+        localStorage.setItem("joxiq_session_user", JSON.stringify(profile));
         setShowAuthModal(false);
 
         // Load user's chat history from Firestore
@@ -605,14 +606,15 @@ export default function App() {
           uid: firebaseUser.uid,
           email,
           displayName,
-          isPro: isProUser || email.toLowerCase() === "mnain7674@gmail.com"
+          isPro: email.toLowerCase() === "mnain7674@gmail.com" || localStorage.getItem("julkar_is_pro") === "true"
         }).catch(err => console.error("Firestore sync auth state error", err));
       } else {
         setUserProfile(null);
+        localStorage.removeItem("joxiq_session_user");
       }
     });
     return () => unsubscribe();
-  }, [isProUser]);
+  }, []);
 
   // Handle Stripe payment success/cancel redirect callback
   useEffect(() => {
@@ -2232,7 +2234,9 @@ export default function App() {
                     console.error("Sign out error", e);
                   }
                   localStorage.removeItem("joxiq_session_user");
+                  localStorage.removeItem("julkar_is_pro");
                   setUserProfile(null);
+                  setIsProUser(false);
                   setShowAuthModal(true);
                 }}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
@@ -3453,12 +3457,17 @@ export default function App() {
                       try {
                         const res = await signInWithPopup(auth, googleProvider);
                         const gUser = res.user;
-                        const profileName = gUser.displayName || gUser.email?.split('@')[0] || "Google User";
-                        const profileEmail = gUser.email || "google_user@joxiq.ai";
+                        if (!gUser || !gUser.email) {
+                          throw new Error("No Google email was returned by Google authentication.");
+                        }
+                        const profileName = gUser.displayName || gUser.email.split('@')[0] || "User";
+                        const profileEmail = gUser.email;
                         const profileObj = { name: profileName, email: profileEmail };
                         setUserProfile(profileObj);
                         localStorage.setItem("joxiq_session_user", JSON.stringify(profileObj));
-                        if (profileEmail.toLowerCase() === "mnain7674@gmail.com") {
+
+                        const isOwner = profileEmail.toLowerCase() === "mnain7674@gmail.com";
+                        if (isOwner) {
                           setIsProUser(true);
                           localStorage.setItem("julkar_is_pro", "true");
                         }
@@ -3467,28 +3476,20 @@ export default function App() {
                           uid: gUser.uid,
                           email: profileEmail,
                           displayName: profileName,
-                          isPro: profileEmail.toLowerCase() === "mnain7674@gmail.com" || isProUser
+                          isPro: isOwner || isProUser
                         }).catch(() => {});
                       } catch (err: any) {
-                        console.info("Google authentication attempt:", err);
+                        console.error("Google authentication attempt failed:", err);
                         if (err?.code === "auth/popup-closed-by-user") {
-                          setAuthError("Google Sign-In popup was closed before completing.");
+                          setAuthError("Google Sign-In was cancelled (popup window was closed). Please try again.");
+                        } else if (err?.code === "auth/popup-blocked") {
+                          setAuthError("Google Sign-In popup was blocked by your browser. Please allow popups for this site and try again.");
+                        } else if (err?.code === "auth/unauthorized-domain") {
+                          setAuthError("This domain is not authorized in Firebase OAuth settings. Please add your domain in Firebase Console > Authentication > Settings > Authorized domains.");
+                        } else if (err?.code === "auth/cancelled-popup-request") {
+                          // Ignore cancelled popup
                         } else {
-                          // Fallback session creation for preview environment
-                          const fallbackEmail = "mnain7674@gmail.com";
-                          const profileName = "Google User (Admin)";
-                          const profileObj = { name: profileName, email: fallbackEmail };
-                          setUserProfile(profileObj);
-                          localStorage.setItem("joxiq_session_user", JSON.stringify(profileObj));
-                          setIsProUser(true);
-                          localStorage.setItem("julkar_is_pro", "true");
-                          setShowAuthModal(false);
-                          await syncUserToFirestore({
-                            uid: "google-" + Date.now(),
-                            email: fallbackEmail,
-                            displayName: profileName,
-                            isPro: true
-                          }).catch(() => {});
+                          setAuthError(err?.message || "Google Sign-In failed. Please try again or use Email Sign-in.");
                         }
                       }
                     }}
@@ -3620,26 +3621,17 @@ export default function App() {
                           isPro: isProUser
                         });
                       } catch (err: any) {
-                        if (err?.code === "auth/operation-not-allowed" || err?.message?.includes("operation-not-allowed")) {
-                          console.info("Firebase email auth provider notice: fallback session created.");
-                          const profileObj = { name, email };
-                          setUserProfile(profileObj);
-                          localStorage.setItem("joxiq_session_user", JSON.stringify(profileObj));
-                          if (email.toLowerCase() === "mnain7674@gmail.com") {
-                            setIsProUser(true);
-                            localStorage.setItem("julkar_is_pro", "true");
-                          }
-                          setShowAuthModal(false);
-                          const mockUid = "user-" + Date.now();
-                          await syncUserToFirestore({
-                            uid: mockUid,
-                            email,
-                            displayName: name,
-                            isPro: email.toLowerCase() === "mnain7674@gmail.com" || isProUser
-                          }).catch(() => {});
+                        console.error("Firebase signup error:", err);
+                        if (err?.code === "auth/operation-not-allowed") {
+                          setAuthError("Email/Password sign-in is not enabled in Firebase Authentication console. Please sign in with Google or enable Email/Password provider in Firebase Console.");
+                        } else if (err?.code === "auth/email-already-in-use") {
+                          setAuthError("This email address is already in use. Please switch to Log In.");
+                        } else if (err?.code === "auth/weak-password") {
+                          setAuthError("Password is too weak. Please use at least 6 characters.");
+                        } else if (err?.code === "auth/invalid-email") {
+                          setAuthError("Please enter a valid email address.");
                         } else {
-                          console.error("Firebase signup error:", err);
-                          setAuthError(err.message || "Failed to create Firebase Authentication user.");
+                          setAuthError(err?.message || "Failed to create account. Please try again.");
                         }
                       }
                     } else {
@@ -3661,34 +3653,29 @@ export default function App() {
                         setUserProfile(profileObj);
                         localStorage.setItem("joxiq_session_user", JSON.stringify(profileObj));
 
+                        const isOwner = email.toLowerCase() === "mnain7674@gmail.com";
+                        if (isOwner) {
+                          setIsProUser(true);
+                          localStorage.setItem("julkar_is_pro", "true");
+                        }
+                        setShowAuthModal(false);
+
                         await syncUserToFirestore({
                           uid: firebaseUser.uid,
                           email: firebaseUser.email || email,
                           displayName: profileName,
-                          isPro: email.toLowerCase() === "mnain7674@gmail.com" || isProUser
+                          isPro: isOwner || isProUser
                         });
                       } catch (err: any) {
-                        if (err?.code === "auth/operation-not-allowed" || err?.message?.includes("operation-not-allowed")) {
-                          console.info("Firebase email auth provider notice: fallback session created.");
-                          const profileName = email.split('@')[0] || "Admin";
-                          const profileObj = { name: profileName, email };
-                          setUserProfile(profileObj);
-                          localStorage.setItem("joxiq_session_user", JSON.stringify(profileObj));
-                          if (email.toLowerCase() === "mnain7674@gmail.com") {
-                            setIsProUser(true);
-                            localStorage.setItem("julkar_is_pro", "true");
-                          }
-                          setShowAuthModal(false);
-                          const mockUid = "user-" + Date.now();
-                          await syncUserToFirestore({
-                            uid: mockUid,
-                            email,
-                            displayName: profileName,
-                            isPro: email.toLowerCase() === "mnain7674@gmail.com" || isProUser
-                          }).catch(() => {});
+                        console.error("Firebase login error:", err);
+                        if (err?.code === "auth/operation-not-allowed") {
+                          setAuthError("Email/Password sign-in is not enabled in Firebase Authentication console. Please sign in with Google or enable Email/Password provider in Firebase Console.");
+                        } else if (err?.code === "auth/user-not-found" || err?.code === "auth/wrong-password" || err?.code === "auth/invalid-credential") {
+                          setAuthError("Invalid email or password. Please verify your credentials or sign up.");
+                        } else if (err?.code === "auth/invalid-email") {
+                          setAuthError("Please enter a valid email address.");
                         } else {
-                          console.error("Firebase login error:", err);
-                          setAuthError(err.message || "Invalid email or password. Please verify your credentials or sign up.");
+                          setAuthError(err?.message || "Failed to sign in. Please verify your credentials or try again.");
                         }
                       }
                     }

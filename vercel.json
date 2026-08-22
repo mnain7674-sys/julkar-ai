@@ -1,6 +1,12 @@
 {
   "version": 2,
   "outputDirectory": "dist",
+  "functions": {
+    "api/index.ts": {
+      "includeFiles": "api/server.cjs",
+      "maxDuration": 60
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -12,4 +18,3 @@
     }
   ]
 }
-
