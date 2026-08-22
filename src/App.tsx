@@ -3,7 +3,16 @@ import { SubscriptionModal } from "./components/SubscriptionModal";
 import { VoiceModeModal } from "./components/VoiceModeModal";
 import { SubscriptionPlanId } from "./config/subscriptionPlans";
 import { syncUserToFirestore, auth, googleProvider, db, doc, getDoc, updateDoc } from "./lib/firebase";
-import { signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "firebase/auth";
+import {
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  sendPasswordResetEmail
+} from "firebase/auth";
 import {
   Plus,
   Send,
@@ -3483,9 +3492,16 @@ export default function App() {
                         if (err?.code === "auth/popup-closed-by-user") {
                           setAuthError("Google Sign-In was cancelled (popup window was closed). Please try again.");
                         } else if (err?.code === "auth/popup-blocked") {
-                          setAuthError("Google Sign-In popup was blocked by your browser. Please allow popups for this site and try again.");
+                          // Try redirect fallback if popup is blocked
+                          try {
+                            await signInWithRedirect(auth, googleProvider);
+                          } catch (redirectErr: any) {
+                            setAuthError("Popup blocked: Please allow popups for this site or try another browser.");
+                          }
                         } else if (err?.code === "auth/unauthorized-domain") {
-                          setAuthError("This domain is not authorized in Firebase OAuth settings. Please add your domain in Firebase Console > Authentication > Settings > Authorized domains.");
+                          setAuthError("Domain not authorized in Firebase: Please add 'joxiq-ai.vercel.app' in Firebase Console > Authentication > Settings > Authorized domains.");
+                        } else if (err?.code === "auth/operation-not-allowed") {
+                          setAuthError("Google Sign-In provider is disabled in Firebase Console. Please go to Authentication > Sign-in method > Enable Google.");
                         } else if (err?.code === "auth/cancelled-popup-request") {
                           // Ignore cancelled popup
                         } else {

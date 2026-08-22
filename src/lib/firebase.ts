@@ -1,12 +1,10 @@
 import { initializeApp, getApps } from "firebase/app";
 import {
   getAuth,
-  initializeAuth,
-  indexedDBLocalPersistence,
-  browserLocalPersistence,
-  browserSessionPersistence,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut
@@ -37,24 +35,12 @@ const firebaseConfig = {
 };
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
-
-function getFirebaseAuthInstance() {
-  if (typeof window !== "undefined") {
-    try {
-      return initializeAuth(app, {
-        persistence: [indexedDBLocalPersistence, browserLocalPersistence, browserSessionPersistence]
-      });
-    } catch {
-      return getAuth(app);
-    }
-  }
-  return getAuth(app);
-}
-
-export const auth = getFirebaseAuthInstance();
+export const auth = getAuth(app);
 export const db = getFirestore(app, firebaseAppletConfig.firestoreDatabaseId || undefined);
-export { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc };
+export { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, signInWithPopup, signInWithRedirect, getRedirectResult };
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.addScope("email");
+googleProvider.addScope("profile");
 googleProvider.setCustomParameters({
   prompt: "select_account"
 });
