@@ -1,4 +1,5 @@
 import { initializeApp, getApps } from "firebase/app";
+import { getAnalytics, isSupported } from "firebase/analytics";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -12,15 +13,15 @@ import {
 import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 
 export const firebaseAppletConfig = {
-  projectId: "inductive-helix-ljkjx",
-  appId: "1:1013599359207:web:17ea0acc84e4ff63221242",
-  apiKey: "AIzaSyBWypD0kfRm25objLD9FIz40zf2tqUvlIc",
-  authDomain: "inductive-helix-ljkjx.firebaseapp.com",
-  firestoreDatabaseId: "ai-studio-geminichatbot-bf6eb762-2279-442d-b4f7-500480e6b0b7",
-  storageBucket: "inductive-helix-ljkjx.firebasestorage.app",
-  messagingSenderId: "1013599359207",
-  measurementId: "",
-  oAuthClientId: "1013599359207-j08f4027qfd1u9k29kqtkkp4b64k2o7l.apps.googleusercontent.com",
+  projectId: "joxiq-ai",
+  appId: "1:698536954361:web:c7f2c1bcdb01f5cee5d528",
+  apiKey: "AIzaSyD6JiZYZQE3tP3Opskq5Gshg34B-UAPbiA",
+  authDomain: "joxiq-ai.firebaseapp.com",
+  firestoreDatabaseId: "",
+  storageBucket: "joxiq-ai.firebasestorage.app",
+  messagingSenderId: "698536954361",
+  measurementId: "G-NRTW7JK3XB",
+  oAuthClientId: "",
   recaptchaSiteKey: ""
 };
 
@@ -35,8 +36,18 @@ const firebaseConfig = {
 };
 
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+
+export let analytics: any = null;
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(app);
+    }
+  }).catch(() => {});
+}
+
 export const auth = getAuth(app);
-export const db = getFirestore(app, firebaseAppletConfig.firestoreDatabaseId || undefined);
+export const db = getFirestore(app);
 export { doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, signInWithPopup, signInWithRedirect, getRedirectResult };
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.addScope("email");
