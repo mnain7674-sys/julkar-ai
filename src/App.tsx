@@ -2319,7 +2319,7 @@ export default function App() {
         )}
 
           {/* Top Navbar */}
-        <header className="h-11 sm:h-16 flex items-center justify-between px-2 sm:px-4 md:px-8 border-b shrink-0 z-10 bg-black/95 border-zinc-850 text-slate-100 backdrop-blur-md">
+        <header className="h-11 sm:h-16 flex items-center justify-between px-2 sm:px-4 md:px-8 shrink-0 z-10 bg-black/95 text-slate-100 backdrop-blur-md">
           <div className="flex items-center gap-1.5 sm:gap-3">
             <button
               id="btn-sidebar-toggle"
@@ -2864,7 +2864,7 @@ export default function App() {
         </div>
 
         {/* Chat Input Bar area */}
-        <footer className="z-20 p-2 sm:p-4 md:p-6 pb-[max(12px,env(safe-area-inset-bottom))] flex flex-col items-center shrink-0 border-t fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:w-full border-zinc-850 bg-black/98 backdrop-blur-xl">
+        <footer className="z-20 p-2 sm:p-4 md:p-6 pb-[max(12px,env(safe-area-inset-bottom))] flex flex-col items-center shrink-0 fixed bottom-0 left-0 right-0 md:relative md:bottom-auto md:w-full bg-black/98 backdrop-blur-xl">
           <div className="w-full max-w-3xl relative">
             {/* Suggested prompt chips row above input box */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none no-scrollbar w-full select-none">
